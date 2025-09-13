@@ -15,7 +15,7 @@ export default function AdminPanel() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASS || 'admin123';
+  const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASS || 'ElectriBol2024!';
 
   useEffect(() => {
     // Verificar si ya está autenticado
