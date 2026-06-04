@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, ListTree, LogOut, Package } from 'lucide-react';
+import { Download, LayoutDashboard, ListTree, LogOut, Package } from 'lucide-react';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -49,6 +49,11 @@ export default function AdminNav() {
             </Link>
           );
         })}
+
+        <a href="/api/admin/analytics-export" className="btn-secondary">
+          <Download className="mr-2 h-4 w-4" />
+          Exportar metricas
+        </a>
 
         <button type="button" onClick={handleLogout} className="btn-secondary">
           <LogOut className="mr-2 h-4 w-4" />

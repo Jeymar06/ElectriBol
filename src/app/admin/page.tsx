@@ -138,6 +138,60 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
       </div>
+
+      <div className="surface p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="eyebrow">Actividad reciente</p>
+            <h2 className="mt-2 font-heading text-3xl uppercase tracking-[-0.04em] text-eb-900">
+              Lo que estan haciendo los clientes
+            </h2>
+          </div>
+          <a href="/api/admin/analytics-export" className="btn-secondary">
+            Descargar CSV
+          </a>
+        </div>
+
+        <div className="mt-6 overflow-x-auto">
+          {analytics.recentEvents.length > 0 ? (
+            <table className="min-w-full text-sm text-eb-800">
+              <thead className="border-b border-eb-300/10 text-left font-heading text-xs uppercase tracking-[0.14em] text-eb-700">
+                <tr>
+                  <th className="px-4 py-4">Evento</th>
+                  <th className="px-4 py-4">Detalle</th>
+                  <th className="px-4 py-4">Ruta</th>
+                  <th className="px-4 py-4">Fecha</th>
+                </tr>
+              </thead>
+              <tbody>
+                {analytics.recentEvents.map((event, index) => (
+                  <tr key={`${event.createdAt}-${event.event}-${index}`} className="border-b border-eb-300/10 last:border-b-0">
+                    <td className="px-4 py-4">
+                      <p className="font-heading text-sm uppercase tracking-[0.12em] text-eb-900">
+                        {event.event.replace(/_/g, ' ')}
+                      </p>
+                    </td>
+                    <td className="px-4 py-4 text-eb-700">
+                      {event.productName || event.query || event.label || event.category || 'Interaccion general'}
+                    </td>
+                    <td className="px-4 py-4 text-eb-700">{event.path}</td>
+                    <td className="px-4 py-4 text-eb-700">
+                      {new Intl.DateTimeFormat('es-CO', {
+                        dateStyle: 'short',
+                        timeStyle: 'short',
+                      }).format(new Date(event.createdAt))}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="text-sm leading-6 text-eb-700">
+              Todavia no hay actividad reciente suficiente para mostrar en esta tabla.
+            </p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

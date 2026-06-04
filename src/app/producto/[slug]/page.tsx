@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import MotionSection from '@/components/home/MotionSection';
 import ProductCard from '@/components/ProductCard';
 import ProductImage, { buildPlaceholder } from '@/components/ProductImage';
+import ProductViewTracker from '@/components/ProductViewTracker';
 import { getProductBySlug, getRelatedProducts } from '@/lib/catalog';
 import { buildProductWhatsAppUrl, siteConfig } from '@/lib/site';
 import { formatCurrency } from '@/utils/format';
@@ -43,6 +44,11 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
 
   return (
     <div className="section-space pt-8">
+      <ProductViewTracker
+        productId={product.id}
+        productName={product.name}
+        category={product.category?.name}
+      />
       <div className="shell space-y-10">
         <MotionSection>
           <nav className="flex flex-wrap items-center gap-2 text-sm text-eb-200">

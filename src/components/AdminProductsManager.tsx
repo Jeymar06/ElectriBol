@@ -1,7 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { GripVertical, ImagePlus, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
+import {
+  Copy,
+  GripVertical,
+  ImagePlus,
+  Pencil,
+  Plus,
+  Save,
+  Search,
+  Trash2,
+  X,
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { Category, ProductWithCategory } from '@/types';
 import { formatCurrency } from '@/utils/format';
@@ -70,8 +80,30 @@ export default function AdminProductsManager({
   const [uploading, setUploading] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [toast, setToast] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'available' | 'featured' | 'hidden'>('all');
 
   const activeCategories = useMemo(() => categories.filter((category) => category.active), [categories]);
+  const filteredProducts = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
+    return products.filter((product) => {
+      const matchesQuery =
+        normalizedQuery.length === 0 ||
+        product.name.toLowerCase().includes(normalizedQuery) ||
+        product.reference.toLowerCase().includes(normalizedQuery) ||
+        product.category?.name.toLowerCase().includes(normalizedQuery);
+      const matchesCategory = categoryFilter === 'all' || product.categoryId === categoryFilter;
+      const matchesStatus =
+        statusFilter === 'all' ||
+        (statusFilter === 'available' && product.available) ||
+        (statusFilter === 'featured' && product.featured) ||
+        (statusFilter === 'hidden' && !product.available);
+
+      return matchesQuery && matchesCategory && matchesStatus;
+    });
+  }, [categoryFilter, products, searchQuery, statusFilter]);
 
   const showToast = (message: string) => {
     setToast(message);
@@ -113,6 +145,37 @@ export default function AdminProductsManager({
 
     await refreshProducts();
     showToast('Producto eliminado');
+  };
+
+  const handleDuplicate = async (product: ProductWithCategory) => {
+    const payload = {
+      name: `${product.name} copia`,
+      reference: `${product.reference}-COPIA`,
+      categoryId: product.categoryId,
+      price: product.price,
+      compareAtPrice: product.compareAtPrice,
+      priceOnRequest: product.priceOnRequest,
+      unit: product.unit,
+      shortDescription: product.shortDescription,
+      description: product.description,
+      images: product.images,
+      available: false,
+      featured: false,
+    };
+
+    const response = await fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      showToast('No fue posible duplicar el producto');
+      return;
+    }
+
+    await refreshProducts();
+    showToast('Producto duplicado como borrador');
   };
 
   const handleImageUpload = async (files: FileList | null) => {
@@ -220,6 +283,66 @@ export default function AdminProductsManager({
         </button>
       </div>
 
+      <div className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr_0.7fr]">
+        <label className="surface flex items-center gap-3 px-4 py-3">
+          <Search className="h-4 w-4 text-eb-700" />
+          <input
+            type="search"
+            className="w-full bg-transparent text-sm text-eb-900 outline-none placeholder:text-eb-700"
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            placeholder="Buscar por nombre, referencia o categoria"
+          />
+        </label>
+
+        <select className="field" value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
+          <option value="all">Todas las categorias</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+
+        <select
+          className="field"
+          value={statusFilter}
+          onChange={(event) => setStatusFilter(event.target.value as 'all' | 'available' | 'featured' | 'hidden')}
+        >
+          <option value="all">Todos los estados</option>
+          <option value="available">Solo disponibles</option>
+          <option value="featured">Solo destacados</option>
+          <option value="hidden">No disponibles</option>
+        </select>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="stat-card">
+          <p className="font-heading text-xs uppercase tracking-[0.14em] text-eb-700">Visibles</p>
+          <p className="mt-4 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+            {products.filter((product) => product.available).length}
+          </p>
+        </div>
+        <div className="stat-card">
+          <p className="font-heading text-xs uppercase tracking-[0.14em] text-eb-700">Destacados</p>
+          <p className="mt-4 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+            {products.filter((product) => product.featured).length}
+          </p>
+        </div>
+        <div className="stat-card">
+          <p className="font-heading text-xs uppercase tracking-[0.14em] text-eb-700">Sin imagen</p>
+          <p className="mt-4 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+            {products.filter((product) => product.images.length === 0).length}
+          </p>
+        </div>
+        <div className="stat-card">
+          <p className="font-heading text-xs uppercase tracking-[0.14em] text-eb-700">Resultado actual</p>
+          <p className="mt-4 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+            {filteredProducts.length}
+          </p>
+        </div>
+      </div>
+
       <div className="surface overflow-x-auto">
         <table className="min-w-full text-sm text-eb-800">
           <thead className="border-b border-eb-300/10 text-left font-heading text-xs uppercase tracking-[0.14em] text-eb-700">
@@ -233,7 +356,7 @@ export default function AdminProductsManager({
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <tr key={product.id} className="border-b border-eb-300/10 last:border-b-0">
                 <td className="px-4 py-4">
                   <div className="flex items-center gap-3">
@@ -277,6 +400,9 @@ export default function AdminProductsManager({
                 </td>
                 <td className="px-4 py-4">
                   <div className="flex justify-end gap-2">
+                    <button className="btn-admin" onClick={() => void handleDuplicate(product)} title="Duplicar">
+                      <Copy className="h-4 w-4" />
+                    </button>
                     <button className="btn-admin" onClick={() => setEditing(mapProductToForm(product))}>
                       <Pencil className="h-4 w-4" />
                     </button>
@@ -287,6 +413,13 @@ export default function AdminProductsManager({
                 </td>
               </tr>
             ))}
+            {filteredProducts.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-4 py-10 text-center text-sm text-eb-700">
+                  No hay productos que coincidan con esos filtros.
+                </td>
+              </tr>
+            ) : null}
           </tbody>
         </table>
       </div>

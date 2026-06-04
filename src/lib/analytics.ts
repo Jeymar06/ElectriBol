@@ -10,6 +10,17 @@ type AnalyticsSummary = {
   mapInteractions: number;
   emptySearches: number;
   topProducts: Array<{ name: string; count: number }>;
+  recentEvents: AnalyticsEventRecord[];
+};
+
+export type AnalyticsEventRecord = {
+  event: AnalyticsEventName;
+  createdAt: string;
+  path: string;
+  label: string | null;
+  productName: string | null;
+  category: string | null;
+  query: string | null;
 };
 
 function emptySummary(): AnalyticsSummary {
@@ -19,6 +30,7 @@ function emptySummary(): AnalyticsSummary {
     mapInteractions: 0,
     emptySearches: 0,
     topProducts: [],
+    recentEvents: [],
   };
 }
 
@@ -68,7 +80,13 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
 
   const rows = data as Array<{
     entity_id: AnalyticsEventName;
-    payload?: { productName?: string | null };
+    payload?: {
+      path?: string | null;
+      label?: string | null;
+      productName?: string | null;
+      category?: string | null;
+      query?: string | null;
+    };
     created_at: string;
   }>;
 
@@ -108,11 +126,65 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     .slice(0, 5)
     .map(([name, count]) => ({ name, count }));
 
+  const recentEvents = rows.slice(0, 8).map((row) => ({
+    event: row.entity_id,
+    createdAt: row.created_at,
+    path: row.payload?.path || '/',
+    label: row.payload?.label || null,
+    productName: row.payload?.productName || null,
+    category: row.payload?.category || null,
+    query: row.payload?.query || null,
+  }));
+
   return {
     totalEvents: rows.length,
     whatsappClicks,
     mapInteractions,
     emptySearches,
     topProducts,
+    recentEvents,
   };
+}
+
+export async function getAnalyticsExportRows() {
+  if (!isSupabaseEnabled()) {
+    return [];
+  }
+
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from('audit_logs')
+    .select('entity_id, payload, created_at')
+    .eq('action', 'track')
+    .eq('entity_type', 'analytics')
+    .order('created_at', { ascending: false })
+    .limit(1000);
+
+  if (error || !data) {
+    return [];
+  }
+
+  return (data as Array<{
+    entity_id: AnalyticsEventName;
+    payload?: {
+      path?: string | null;
+      label?: string | null;
+      productName?: string | null;
+      category?: string | null;
+      query?: string | null;
+      ip?: string | null;
+      userAgent?: string | null;
+    };
+    created_at: string;
+  }>).map((row) => ({
+    createdAt: row.created_at,
+    event: row.entity_id,
+    path: row.payload?.path || '/',
+    label: row.payload?.label || '',
+    productName: row.payload?.productName || '',
+    category: row.payload?.category || '',
+    query: row.payload?.query || '',
+    ip: row.payload?.ip || '',
+    userAgent: row.payload?.userAgent || '',
+  }));
 }
