@@ -29,20 +29,57 @@ export function createWhatsAppUrl(message: string): string {
   return `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
+export function getPublicBaseUrl(): string {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '');
+  if (siteUrl) {
+    return siteUrl;
+  }
+
+  const vercelUrl = process.env.VERCEL_URL;
+  if (vercelUrl) {
+    return `https://${vercelUrl}`;
+  }
+
+  return 'http://localhost:3000';
+}
+
+export function toAbsoluteSiteUrl(pathOrUrl?: string | null): string | undefined {
+  if (!pathOrUrl || pathOrUrl.startsWith('data:') || pathOrUrl.startsWith('blob:')) {
+    return undefined;
+  }
+
+  if (/^https?:\/\//.test(pathOrUrl)) {
+    return pathOrUrl;
+  }
+
+  return `${getPublicBaseUrl()}/${pathOrUrl.replace(/^\//, '')}`;
+}
+
 export function buildProductWhatsAppUrl(
   name: string,
   reference: string,
-  options?: { category?: string; available?: boolean }
+  options?: {
+    category?: string;
+    available?: boolean;
+    slug?: string;
+    imageUrl?: string | null;
+  }
 ): string {
   const availabilityText =
     options?.available === false
       ? 'Quiero confirmar disponibilidad y alternativas.'
       : 'Quiero confirmar disponibilidad y precio final.';
   const categoryText = options?.category ? ` Categoria: ${options.category}.` : '';
+  const productUrl = options?.slug ? toAbsoluteSiteUrl(`/producto/${options.slug}`) : undefined;
+  const imageUrl = toAbsoluteSiteUrl(options?.imageUrl);
+  const contextLines = [
+    `Hola, vi en la pagina el producto *${name}* (Ref: ${reference}).${categoryText}`,
+    productUrl ? `Enlace del producto: ${productUrl}` : undefined,
+    imageUrl ? `Imagen principal: ${imageUrl}` : undefined,
+    availabilityText,
+  ].filter(Boolean);
 
-  return createWhatsAppUrl(
-    `Hola, vi en la pagina el producto *${name}* (Ref: ${reference}).${categoryText} ${availabilityText}`
-  );
+  return createWhatsAppUrl(contextLines.join('\n'));
 }
 
 export function buildCatalogWhatsAppUrl(category?: string, query?: string): string {

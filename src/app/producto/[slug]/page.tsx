@@ -54,6 +54,8 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
   const productWhatsAppUrl = buildProductWhatsAppUrl(product.name, product.reference, {
     category: product.category?.name,
     available: product.available,
+    slug: product.slug,
+    imageUrl: product.images[0],
   });
 
   return (

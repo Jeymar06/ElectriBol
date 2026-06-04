@@ -70,6 +70,8 @@ export default function ProductCard({ product }: { product: ProductWithCategory 
           href={buildProductWhatsAppUrl(product.name, product.reference, {
             category: product.category?.name,
             available: product.available,
+            slug: product.slug,
+            imageUrl: product.images[0],
           })}
           target="_blank"
           rel="noreferrer"
