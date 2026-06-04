@@ -52,37 +52,41 @@ function createEmptyProduct(categoryId: string): ProductFormState {
 function mapProductToForm(product: ProductWithCategory): ProductFormState {
   return {
     id: product.id,
-    name: product.name,
-    reference: product.reference,
+    name: typeof product.name === 'string' ? product.name : '',
+    reference: typeof product.reference === 'string' ? product.reference : '',
     categoryId: product.categoryId,
     price: product.price?.toString() || '',
     compareAtPrice: product.compareAtPrice?.toString() || '',
     priceOnRequest: product.priceOnRequest,
-    unit: product.unit,
-    shortDescription: product.shortDescription,
-    description: product.description,
-    images: product.images,
+    unit: typeof product.unit === 'string' ? product.unit : 'unidad',
+    shortDescription: typeof product.shortDescription === 'string' ? product.shortDescription : '',
+    description: typeof product.description === 'string' ? product.description : '',
+    images: Array.isArray(product.images) ? product.images : [],
     available: product.available,
     featured: product.featured,
   };
 }
 
+function hasText(value: unknown) {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
 function getProductIssues(product: ProductWithCategory) {
   const issues: string[] = [];
 
-  if (product.images.length === 0) {
+  if (!Array.isArray(product.images) || product.images.length === 0) {
     issues.push('Sin imagen');
   }
 
-  if (!product.shortDescription.trim()) {
+  if (!hasText(product.shortDescription)) {
     issues.push('Sin resumen');
   }
 
-  if (!product.description.trim()) {
+  if (!hasText(product.description)) {
     issues.push('Sin descripcion');
   }
 
-  if (!product.reference.trim()) {
+  if (!hasText(product.reference)) {
     issues.push('Sin referencia');
   }
 
@@ -362,7 +366,7 @@ export default function AdminProductsManager({
         <div className="stat-card">
           <p className="font-heading text-xs uppercase tracking-[0.14em] text-eb-700">Sin imagen</p>
           <p className="mt-4 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
-            {products.filter((product) => product.images.length === 0).length}
+            {products.filter((product) => !Array.isArray(product.images) || product.images.length === 0).length}
           </p>
         </div>
         <div className="stat-card">
@@ -402,20 +406,20 @@ export default function AdminProductsManager({
                   <div className="flex items-center gap-3">
                     <div className="relative h-16 w-20 overflow-hidden rounded-lg border border-eb-300/10 bg-eb-100">
                       <Image
-                        src={product.images[0] || '/og-electribol.svg'}
-                        alt={product.name}
+                        src={(Array.isArray(product.images) ? product.images[0] : '') || '/og-electribol.svg'}
+                        alt={typeof product.name === 'string' ? product.name : 'Producto'}
                         fill
                         sizes="80px"
-                        unoptimized={Boolean(product.images[0]?.startsWith('data:'))}
+                        unoptimized={Boolean(Array.isArray(product.images) && product.images[0]?.startsWith('data:'))}
                         className="h-full w-full object-cover"
                       />
                     </div>
                     <div>
                       <p className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
-                        {product.name}
+                        {typeof product.name === 'string' && product.name.trim() ? product.name : 'Producto sin nombre'}
                       </p>
                       <p className="text-xs uppercase tracking-[0.16em] text-eb-700">
-                        Ref. {product.reference}
+                        Ref. {typeof product.reference === 'string' && product.reference.trim() ? product.reference : 'Sin referencia'}
                       </p>
                       {issues.length > 0 ? (
                         <div className="mt-2 flex flex-wrap gap-2">

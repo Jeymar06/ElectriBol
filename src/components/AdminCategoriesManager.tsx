@@ -21,6 +21,10 @@ function createEmptyCategory(): CategoryFormState {
   };
 }
 
+function safeText(value: unknown) {
+  return typeof value === 'string' ? value : '';
+}
+
 export default function AdminCategoriesManager({
   initialCategories,
   products,
@@ -40,9 +44,9 @@ export default function AdminCategoriesManager({
       }
 
       return (
-        category.name.toLowerCase().includes(normalizedQuery) ||
-        category.description.toLowerCase().includes(normalizedQuery) ||
-        category.icon.toLowerCase().includes(normalizedQuery)
+        safeText(category.name).toLowerCase().includes(normalizedQuery) ||
+        safeText(category.description).toLowerCase().includes(normalizedQuery) ||
+        safeText(category.icon).toLowerCase().includes(normalizedQuery)
       );
     });
   }, [categories, query]);
@@ -180,12 +184,14 @@ export default function AdminCategoriesManager({
                 <td className="px-4 py-4">
                   <div>
                     <p className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
-                      {category.name}
+                      {safeText(category.name) || 'Categoria sin nombre'}
                     </p>
-                    <p className="text-xs uppercase tracking-[0.16em] text-eb-700">{category.icon}</p>
+                    <p className="text-xs uppercase tracking-[0.16em] text-eb-700">
+                      {safeText(category.icon) || 'Sin icono'}
+                    </p>
                   </div>
                 </td>
-                <td className="px-4 py-4 text-eb-700">{category.description}</td>
+                <td className="px-4 py-4 text-eb-700">{safeText(category.description) || 'Sin descripcion'}</td>
                 <td className="px-4 py-4 text-eb-700">
                   {products.filter((product) => product.categoryId === category.id).length}
                 </td>
@@ -262,7 +268,7 @@ export default function AdminCategoriesManager({
             <label className="label">Descripcion</label>
             <textarea
               className="field min-h-[140px]"
-              value={editing.description}
+              value={safeText(editing.description)}
               onChange={(event) => setEditing({ ...editing, description: event.target.value })}
             />
           </div>

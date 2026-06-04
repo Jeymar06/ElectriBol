@@ -13,6 +13,26 @@ import { getAnalyticsSummary } from '@/lib/analytics';
 import { isAdminAuthenticated } from '@/lib/auth';
 import { getCategories, getProductsWithCategories } from '@/lib/catalog';
 
+function hasText(value: unknown) {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function formatAdminDate(value: unknown) {
+  if (typeof value !== 'string') {
+    return 'Fecha no disponible';
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return 'Fecha no disponible';
+  }
+
+  return new Intl.DateTimeFormat('es-CO', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+  }).format(date);
+}
+
 export default async function AdminDashboardPage() {
   const authenticated = await isAdminAuthenticated();
   if (!authenticated) {
@@ -80,7 +100,7 @@ export default async function AdminDashboardPage() {
               return (
                 <div key={category.id} className="flex items-center justify-between border-b border-eb-300/10 pb-4 last:border-b-0 last:pb-0">
                   <span className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
-                    {category.name}
+                    {hasText(category.name) ? category.name : 'Categoria sin nombre'}
                   </span>
                   <span className="text-sm text-eb-700">{total} productos</span>
                 </div>
@@ -96,10 +116,10 @@ export default async function AdminDashboardPage() {
               <div key={product.id} className="flex items-center justify-between border-b border-eb-300/10 pb-4 last:border-b-0 last:pb-0">
                 <div>
                   <p className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
-                    {product.name}
+                    {hasText(product.name) ? product.name : 'Producto sin nombre'}
                   </p>
                   <p className="text-xs uppercase tracking-[0.16em] text-eb-700">
-                    {product.category?.name || 'Sin categoria'} | Ref. {product.reference}
+                    {hasText(product.category?.name) ? product.category?.name : 'Sin categoria'} | Ref. {hasText(product.reference) ? product.reference : 'Sin referencia'}
                   </p>
                 </div>
                 <span className="text-sm text-eb-700">{product.available ? 'Disponible' : 'Sin stock'}</span>
@@ -148,7 +168,7 @@ export default async function AdminDashboardPage() {
                   className="flex items-center justify-between border-b border-eb-300/10 pb-4 last:border-b-0 last:pb-0"
                 >
                   <span className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
-                    {product.name}
+                    {hasText(product.name) ? product.name : 'Producto sin nombre'}
                   </span>
                   <span className="text-sm text-eb-700">{product.count} interacciones</span>
                 </div>
@@ -173,7 +193,7 @@ export default async function AdminDashboardPage() {
                   className="flex items-center justify-between border-b border-eb-300/10 pb-4 last:border-b-0 last:pb-0"
                 >
                   <span className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
-                    {category.name}
+                    {hasText(category.name) ? category.name : 'Categoria sin nombre'}
                   </span>
                   <span className="text-sm text-eb-700">{category.count} interacciones</span>
                 </div>
@@ -192,17 +212,17 @@ export default async function AdminDashboardPage() {
             {products.filter(
               (product) =>
                 product.images.length === 0 ||
-                !product.shortDescription.trim() ||
-                !product.description.trim() ||
-                !product.reference.trim()
+                !hasText(product.shortDescription) ||
+                !hasText(product.description) ||
+                !hasText(product.reference)
             ).length > 0 ? (
               products
                 .filter(
                   (product) =>
                     product.images.length === 0 ||
-                    !product.shortDescription.trim() ||
-                    !product.description.trim() ||
-                    !product.reference.trim()
+                    !hasText(product.shortDescription) ||
+                    !hasText(product.description) ||
+                    !hasText(product.reference)
                 )
                 .slice(0, 5)
                 .map((product) => (
@@ -212,10 +232,10 @@ export default async function AdminDashboardPage() {
                 >
                   <div>
                     <span className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
-                      {product.name}
+                      {hasText(product.name) ? product.name : 'Producto sin nombre'}
                     </span>
                     <p className="text-xs uppercase tracking-[0.16em] text-eb-700">
-                      {product.category?.name || 'Sin categoria'}
+                      {hasText(product.category?.name) ? product.category?.name : 'Sin categoria'}
                     </p>
                   </div>
                   <span className="text-sm text-eb-700">
@@ -269,10 +289,7 @@ export default async function AdminDashboardPage() {
                     </td>
                     <td className="px-4 py-4 text-eb-700">{event.path}</td>
                     <td className="px-4 py-4 text-eb-700">
-                      {new Intl.DateTimeFormat('es-CO', {
-                        dateStyle: 'short',
-                        timeStyle: 'short',
-                      }).format(new Date(event.createdAt))}
+                      {formatAdminDate(event.createdAt)}
                     </td>
                   </tr>
                 ))}
