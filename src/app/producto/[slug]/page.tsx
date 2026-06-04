@@ -2,12 +2,13 @@ export const dynamic = 'force-dynamic';
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronRight, MessageCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ChevronRight, MessageCircle, Sparkles } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import MotionSection from '@/components/home/MotionSection';
 import ProductCard from '@/components/ProductCard';
 import ProductImage, { buildPlaceholder } from '@/components/ProductImage';
 import { getProductBySlug, getRelatedProducts } from '@/lib/catalog';
-import { buildProductWhatsAppUrl } from '@/lib/site';
+import { buildProductWhatsAppUrl, siteConfig } from '@/lib/site';
 import { formatCurrency } from '@/utils/format';
 import { buildMetadata } from '@/utils/seo';
 
@@ -41,25 +42,27 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
   const imageList = gallery.length > 0 ? gallery : [null];
 
   return (
-    <div className="section-space">
+    <div className="section-space pt-8">
       <div className="shell space-y-10">
-        <nav className="flex flex-wrap items-center gap-2 text-sm text-eb-200">
-          <Link href="/">Inicio</Link>
-          <ChevronRight className="h-4 w-4" />
-          <Link href="/catalogo">Catalogo</Link>
-          <ChevronRight className="h-4 w-4" />
-          {product.category ? (
-            <>
-              <Link href={`/catalogo/${product.category.slug}`}>{product.category.name}</Link>
-              <ChevronRight className="h-4 w-4" />
-            </>
-          ) : null}
-          <span className="text-eb-900">{product.name}</span>
-        </nav>
+        <MotionSection>
+          <nav className="flex flex-wrap items-center gap-2 text-sm text-eb-200">
+            <Link href="/">Inicio</Link>
+            <ChevronRight className="h-4 w-4" />
+            <Link href="/catalogo">Catalogo</Link>
+            <ChevronRight className="h-4 w-4" />
+            {product.category ? (
+              <>
+                <Link href={`/catalogo/${product.category.slug}`}>{product.category.name}</Link>
+                <ChevronRight className="h-4 w-4" />
+              </>
+            ) : null}
+            <span className="text-eb-900">{product.name}</span>
+          </nav>
+        </MotionSection>
 
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="space-y-4">
-            <div className="surface overflow-hidden">
+        <div className="grid gap-8 lg:grid-cols-[1.04fr_0.96fr]">
+          <MotionSection className="space-y-4">
+            <div className="product-gallery-shell overflow-hidden">
               <div className="relative aspect-[4/3]">
                 <ProductImage
                   product={product}
@@ -68,12 +71,13 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
                   sizes="(max-width: 990px) 100vw, 55vw"
                   className="h-full w-full object-cover"
                 />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_42%,rgba(11,34,66,0.16)_100%)]" />
               </div>
             </div>
             {imageList.length > 1 ? (
               <div className="grid grid-cols-4 gap-3">
                 {imageList.map((image, index) => (
-                  <div key={`${image}-${index}`} className="surface overflow-hidden">
+                  <div key={`${image}-${index}`} className="glass-slab overflow-hidden">
                     <Image
                       src={image || buildPlaceholder(product)}
                       alt={`${product.name} ${index + 1}`}
@@ -86,51 +90,85 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
                 ))}
               </div>
             ) : null}
-          </div>
+          </MotionSection>
 
-          <div className="surface p-6 md:p-8">
-            <p className="eyebrow">{product.category?.name || 'Producto'}</p>
-            <h1 className="mt-4 font-heading text-5xl uppercase tracking-[-0.06em] text-eb-900">
-              {product.name}
-            </h1>
-            <p className="mt-3 text-sm uppercase tracking-[0.18em] text-eb-700">
-              Ref. {product.reference}
-            </p>
+          <MotionSection className="product-detail-shell p-6 md:p-8" delay={0.08}>
+            <div className="space-y-5">
+              <div className="inline-flex items-center gap-2 rounded-full border border-eb-500/10 bg-white/85 px-4 py-2">
+                <Sparkles className="h-4 w-4 text-eb-accent" />
+                <span className="font-heading text-[11px] uppercase tracking-[0.22em] text-eb-800">
+                  {product.category?.name || 'Producto'}
+                </span>
+              </div>
 
-            <div className="mt-8 space-y-3">
-              <p className="font-heading text-4xl uppercase tracking-[-0.05em] text-eb-500">
-                {formatCurrency(product.priceOnRequest ? null : product.price)}
-              </p>
-              {product.compareAtPrice ? (
-                <p className="text-base text-eb-error line-through">{formatCurrency(product.compareAtPrice)}</p>
-              ) : null}
-              <p className="text-sm uppercase tracking-[0.18em] text-eb-800">
-                {product.available ? 'Disponible' : 'Disponibilidad por confirmar'} | Por {product.unit}
-              </p>
+              <div>
+                <h1 className="display-title text-5xl sm:text-6xl">{product.name}</h1>
+                <p className="mt-3 text-sm uppercase tracking-[0.18em] text-eb-700">
+                  Ref. {product.reference}
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <p className="font-heading text-4xl uppercase tracking-[-0.05em] text-eb-500">
+                  {formatCurrency(product.priceOnRequest ? null : product.price)}
+                </p>
+                {product.compareAtPrice ? (
+                  <p className="text-base text-eb-error line-through">
+                    {formatCurrency(product.compareAtPrice)}
+                  </p>
+                ) : null}
+                <p className="text-sm uppercase tracking-[0.18em] text-eb-800">
+                  {product.available ? 'Disponible' : 'Disponibilidad por confirmar'} | Por {product.unit}
+                </p>
+              </div>
             </div>
 
-            <div className="mt-8 rounded-2xl bg-[linear-gradient(180deg,#f7fbff_0%,#ffffff_100%)] p-5">
-              <p className="text-base leading-7 text-eb-700">{product.description}</p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="glass-slab p-5">
+                <p className="font-heading text-[11px] uppercase tracking-[0.18em] text-eb-700">
+                  Descripcion
+                </p>
+                <p className="mt-4 text-sm leading-7 text-eb-700">{product.description}</p>
+              </div>
+              <div className="glass-slab p-5">
+                <p className="font-heading text-[11px] uppercase tracking-[0.18em] text-eb-700">
+                  Contacto rapido
+                </p>
+                <p className="mt-4 text-sm leading-7 text-eb-700">
+                  Si quieres confirmar disponibilidad, compatibilidad o precio final, te respondemos
+                  por WhatsApp desde {siteConfig.city}.
+                </p>
+                <div className="mt-5 inline-flex items-center gap-2 text-sm text-eb-800">
+                  <CheckCircle2 className="h-4 w-4 text-eb-accent" />
+                  Respuesta directa del local
+                </div>
+              </div>
             </div>
 
-            <a
-              href={buildProductWhatsAppUrl(product.name, product.reference)}
-              target="_blank"
-              rel="noreferrer"
-              className="btn-primary mt-8 w-full"
-            >
-              <MessageCircle className="mr-2 h-5 w-5" />
-              Consultar por WhatsApp
-            </a>
-          </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <a
+                href={buildProductWhatsAppUrl(product.name, product.reference)}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-primary flex-1"
+              >
+                <MessageCircle className="mr-2 h-5 w-5" />
+                Consultar por WhatsApp
+              </a>
+              <Link href="/catalogo" className="btn-secondary flex-1">
+                Volver al catalogo
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </div>
+          </MotionSection>
         </div>
 
         {related.length > 0 ? (
-          <section className="space-y-6">
+          <MotionSection className="space-y-6">
             <div>
               <p className="eyebrow">Relacionados</p>
-              <h2 className="mt-3 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
-                Mas referencias de esta categoria
+              <h2 className="display-title mt-3 text-4xl">
+                Mas referencias de esta categoria con el mismo acabado visual.
               </h2>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -138,7 +176,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
                 <ProductCard key={item.id} product={item} />
               ))}
             </div>
-          </section>
+          </MotionSection>
         ) : null}
       </div>
     </div>

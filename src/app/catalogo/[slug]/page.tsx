@@ -1,7 +1,10 @@
 export const dynamic = 'force-dynamic';
 
+import Link from 'next/link';
+import { ArrowRight, Layers3 } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import CatalogClient from '@/components/CatalogClient';
+import MotionSection from '@/components/home/MotionSection';
 import { getCategories, getCategoryBySlug, getProductsByCategory, getProductsWithCategories } from '@/lib/catalog';
 import { buildMetadata } from '@/utils/seo';
 
@@ -34,19 +37,44 @@ export default async function CatalogCategoryPage({ params }: { params: { slug: 
   const total = (await getProductsByCategory(category.id)).length;
 
   return (
-    <div className="section-space">
+    <div className="section-space pt-8">
       <div className="shell space-y-8">
-        <div className="max-w-3xl space-y-4">
-          <p className="eyebrow">Categoria</p>
-          <h1 className="font-heading text-5xl uppercase tracking-[-0.06em] text-eb-900">
-            {category.name}
-          </h1>
-          <p className="text-base leading-7 text-eb-700">{category.description}</p>
-          <p className="font-heading text-sm uppercase tracking-[0.16em] text-eb-800">
-            {total} referencias disponibles en esta familia
-          </p>
-        </div>
-        <CatalogClient products={products} categories={categories} initialCategory={category.slug} />
+        <MotionSection className="catalog-hero">
+          <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+            <div className="space-y-5">
+              <p className="eyebrow">Categoria</p>
+              <h1 className="display-title text-5xl sm:text-6xl">{category.name}</h1>
+              <p className="max-w-2xl text-base leading-8 text-eb-700">{category.description}</p>
+              <div className="flex flex-wrap gap-3">
+                <span className="inline-flex items-center gap-2 rounded-full border border-eb-500/10 bg-white/88 px-4 py-2 text-sm text-eb-800">
+                  <Layers3 className="h-4 w-4 text-eb-accent" />
+                  {total} referencias en esta familia
+                </span>
+                <Link href="/catalogo" className="btn-secondary">
+                  Volver al catalogo
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+
+            <div className="glass-slab p-6">
+              <p className="font-heading text-[11px] uppercase tracking-[0.2em] text-eb-700">
+                Navegacion guiada
+              </p>
+              <p className="mt-4 font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
+                Todo el catalogo mantiene el mismo lenguaje visual.
+              </p>
+              <p className="mt-4 text-sm leading-7 text-eb-700">
+                Esta vista conserva el filtro activo de la categoria pero sigue permitiendo buscar,
+                comparar y saltar a otras familias sin perder contexto.
+              </p>
+            </div>
+          </div>
+        </MotionSection>
+
+        <MotionSection>
+          <CatalogClient products={products} categories={categories} initialCategory={category.slug} />
+        </MotionSection>
       </div>
     </div>
   );

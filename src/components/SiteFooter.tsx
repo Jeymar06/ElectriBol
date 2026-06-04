@@ -21,6 +21,12 @@ export default function SiteFooter() {
             <Link href="/">Inicio</Link>
             <Link href="/catalogo">Catalogo</Link>
             <Link href="/contacto">Contacto</Link>
+            <Link
+              href="/admin/login"
+              className="pt-2 font-heading text-[11px] uppercase tracking-[0.18em] text-eb-600"
+            >
+              Acceso admin
+            </Link>
           </div>
         </div>
 
