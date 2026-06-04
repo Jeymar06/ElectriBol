@@ -178,26 +178,34 @@ export default async function HomePage() {
 
       <MotionSection className="section-space pt-12">
         <div className="shell">
-          <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-3xl space-y-4">
-              <p className="eyebrow">Destacados</p>
-              <h2 className="display-title text-4xl sm:text-5xl">
-                Algunas referencias que mas nos piden nuestros clientes.
-              </h2>
+          <div className="product-shelf-shell">
+            <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl space-y-4">
+                <p className="eyebrow">Destacados</p>
+                <h2 className="display-title text-4xl sm:text-5xl">
+                  Algunas referencias que mas nos piden nuestros clientes.
+                </h2>
+                <p className="max-w-2xl text-sm leading-7 text-eb-700">
+                  Una vitrina corta para empezar rapido: revisa, abre la ficha o consulta por
+                  WhatsApp con la referencia lista.
+                </p>
+              </div>
+              <Link
+                href="/catalogo"
+                className="inline-flex items-center gap-2 font-heading text-sm uppercase tracking-[0.08em] text-eb-800"
+              >
+                Catalogo completo
+                <MoveRight className="h-4 w-4" />
+              </Link>
             </div>
-            <Link
-              href="/catalogo"
-              className="inline-flex items-center gap-2 font-heading text-sm uppercase tracking-[0.14em] text-eb-800"
-            >
-              Catalogo completo
-              <MoveRight className="h-4 w-4" />
-            </Link>
-          </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            <div className="product-shelf">
+              {featuredProducts.map((product) => (
+                <div key={product.id} className="product-shelf-item">
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </MotionSection>

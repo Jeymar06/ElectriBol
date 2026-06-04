@@ -11,6 +11,10 @@ export default function ProductCard({ product }: { product: ProductWithCategory 
     <article className="surface group overflow-hidden rounded-2xl border-white/70 bg-[rgba(255,255,255,0.88)] shadow-[0_18px_58px_rgba(17,53,99,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_26px_76px_rgba(17,53,99,0.13)]">
       <Link href={`/producto/${product.slug}`} className="block">
         <div className="relative aspect-[4/3] overflow-hidden border-b border-[rgba(144,202,249,0.12)]">
+          <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-2">
+            {product.featured ? <span className="product-badge">Destacado</span> : null}
+            {product.available ? <span className="product-badge product-badge-light">Disponible</span> : null}
+          </div>
           <ProductImage
             product={product}
             fill
