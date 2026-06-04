@@ -38,7 +38,7 @@ export default function CatalogClient({
 
   return (
     <div className="space-y-8">
-      <div className="surface p-5 md:p-6">
+      <div className="glass-slab p-5 md:p-6">
         <div className="flex flex-col gap-5">
           <div className="relative">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-eb-200" />
@@ -57,7 +57,7 @@ export default function CatalogClient({
               className={`rounded-full px-4 py-2 font-heading text-xs uppercase tracking-[0.14em] transition ${
                 category === 'todos'
                   ? 'bg-eb-500 text-white'
-                  : 'border border-eb-500/10 text-eb-700 hover:text-eb-900'
+                  : 'border border-eb-500/10 bg-white/90 text-eb-700 hover:text-eb-900'
               }`}
             >
               Todos
@@ -70,7 +70,7 @@ export default function CatalogClient({
                 className={`rounded-full px-4 py-2 font-heading text-xs uppercase tracking-[0.14em] transition ${
                   category === item.slug
                     ? 'bg-eb-500 text-white'
-                    : 'border border-eb-500/10 text-eb-700 hover:text-eb-900'
+                    : 'border border-eb-500/10 bg-white/90 text-eb-700 hover:text-eb-900'
                 }`}
               >
                 {item.name}
@@ -103,7 +103,7 @@ export default function CatalogClient({
           ))}
         </div>
       ) : (
-        <div className="surface p-10 text-center">
+        <div className="glass-slab p-10 text-center">
           <p className="font-heading text-2xl uppercase tracking-[-0.04em] text-eb-900">
             No encontramos productos con esos filtros
           </p>

@@ -18,9 +18,6 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 SUPABASE_STORAGE_BUCKET=product-images
-
-SUPABASE_ADMIN_EMAIL=
-SUPABASE_ADMIN_PASSWORD=
 ```
 
 ## Pasos
@@ -61,10 +58,10 @@ Ese script:
 
 ## Fallback local
 
-Si Supabase no esta configurado, la app sigue usando:
+Si Supabase no esta configurado, la app puede usar:
 
 - JSON local para datos
 - cookie local para admin
 - `public/uploads` para imagenes
 
-Eso sirve para desarrollo, pero en produccion la fuente de verdad debe ser Supabase.
+Ese fallback debe quedarse solo para desarrollo local.

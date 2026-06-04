@@ -5,8 +5,8 @@ import { useState } from 'react';
 
 export default function AdminLoginForm() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@electribol.com');
-  const [password, setPassword] = useState('ElectriBol2026!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -40,8 +40,7 @@ export default function AdminLoginForm() {
           Login de superadmin
         </h1>
         <p className="mt-3 text-sm leading-6 text-eb-700">
-          La app ya soporta Supabase Auth para despliegue. Si no configuras Supabase, este acceso
-          sigue funcionando en modo local fallback.
+          Acceso restringido para administradores autorizados.
         </p>
       </div>
 
@@ -53,6 +52,7 @@ export default function AdminLoginForm() {
           id="admin-email"
           type="email"
           className="field"
+          autoComplete="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           required
@@ -67,6 +67,7 @@ export default function AdminLoginForm() {
           id="admin-password"
           type="password"
           className="field"
+          autoComplete="current-password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           required

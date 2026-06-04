@@ -10,7 +10,6 @@ const links = [
   { href: '/', label: 'Inicio' },
   { href: '/catalogo', label: 'Catalogo' },
   { href: '/contacto', label: 'Contacto' },
-  { href: '/admin/login', label: 'Admin' },
 ];
 
 export default function SiteHeader() {

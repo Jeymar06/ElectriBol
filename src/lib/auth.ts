@@ -4,15 +4,39 @@ import crypto from 'crypto';
 import { cookies } from 'next/headers';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
-import { isSupabaseEnabled } from '@/lib/env';
+import { isProduction, isSupabaseEnabled } from '@/lib/env';
 import type { Profile } from '@/types';
 
-const SESSION_COOKIE = 'electribol_admin_session';
-const defaultEmail = process.env.ADMIN_EMAIL || 'admin@electribol.com';
-const defaultPassword = process.env.ADMIN_PASSWORD || 'ElectriBol2026!';
-const sessionSecret = process.env.ADMIN_SESSION_SECRET || 'electribol-local-secret';
+const SESSION_COOKIE = isProduction()
+  ? '__Host-electribol_admin_session'
+  : 'electribol_admin_session';
+const adminEmail = process.env.ADMIN_EMAIL;
+const adminPassword = process.env.ADMIN_PASSWORD;
+const sessionSecret = process.env.ADMIN_SESSION_SECRET;
+
+function getCookieOptions() {
+  return {
+    httpOnly: true,
+    sameSite: 'strict' as const,
+    secure: isProduction(),
+    path: '/',
+    maxAge: 60 * 60 * 4,
+  };
+}
+
+function isLocalAuthConfigured(): boolean {
+  return Boolean(adminEmail && adminPassword && sessionSecret);
+}
+
+function isLocalAuthAllowed(): boolean {
+  return !isProduction() && isLocalAuthConfigured();
+}
 
 function buildSessionToken(email: string): string {
+  if (!sessionSecret) {
+    throw new Error('La sesion local no esta configurada');
+  }
+
   return crypto.createHmac('sha256', sessionSecret).update(email).digest('hex');
 }
 
@@ -38,83 +62,33 @@ async function getSupabaseProfile(userId: string): Promise<Profile | null> {
   };
 }
 
-export function getAdminCredentials() {
-  return {
-    email: defaultEmail,
-    password: defaultPassword,
-  };
-}
-
-export async function createAdminSession(email: string): Promise<void> {
+export async function signInAdmin(email: string, password: string): Promise<void> {
   if (isSupabaseEnabled()) {
     const supabase = createSupabaseServerClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password: process.env.SUPABASE_ADMIN_PASSWORD || defaultPassword,
-    });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error) {
-      throw error;
+    if (error || !data.user) {
+      throw new Error('Credenciales invalidas');
+    }
+
+    const profile = await getSupabaseProfile(data.user.id);
+    if (!profile || profile.role !== 'admin') {
+      await supabase.auth.signOut();
+      throw new Error('Credenciales invalidas');
     }
 
     return;
   }
 
-  cookies().set(SESSION_COOKIE, buildSessionToken(email), {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: false,
-    path: '/',
-    maxAge: 60 * 60 * 12,
-  });
-}
-
-export async function signInAdmin(email: string, password: string): Promise<void> {
-  if (isSupabaseEnabled()) {
-    try {
-      const supabase = createSupabaseServerClient();
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-      if (error || !data.user) {
-        throw error || new Error('No fue posible iniciar sesion');
-      }
-
-      const profile = await getSupabaseProfile(data.user.id);
-      if (!profile || profile.role !== 'admin') {
-        await supabase.auth.signOut();
-        throw new Error('Tu usuario no tiene permisos de administrador');
-      }
-
-      return;
-    } catch (error) {
-      // Mientras se termina de montar el esquema en Supabase, permitimos
-      // seguir usando el fallback local con las mismas credenciales.
-      if (email === defaultEmail && password === defaultPassword) {
-        cookies().set(SESSION_COOKIE, buildSessionToken(email), {
-          httpOnly: true,
-          sameSite: 'lax',
-          secure: false,
-          path: '/',
-          maxAge: 60 * 60 * 12,
-        });
-        return;
-      }
-
-      throw error;
-    }
+  if (!isLocalAuthAllowed() || !adminEmail || !adminPassword) {
+    throw new Error('El acceso local de administrador no esta disponible');
   }
 
-  if (email !== defaultEmail || password !== defaultPassword) {
+  if (email !== adminEmail || password !== adminPassword) {
     throw new Error('Credenciales invalidas');
   }
 
-  cookies().set(SESSION_COOKIE, buildSessionToken(email), {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: false,
-    path: '/',
-    maxAge: 60 * 60 * 12,
-  });
+  cookies().set(SESSION_COOKIE, buildSessionToken(email), getCookieOptions());
 }
 
 export async function destroyAdminSession(): Promise<void> {
@@ -147,13 +121,13 @@ export async function getAdminProfile(): Promise<Profile | null> {
   }
 
   const token = cookies().get(SESSION_COOKIE)?.value;
-  if (token !== buildSessionToken(defaultEmail)) {
+  if (!isLocalAuthAllowed() || !adminEmail || token !== buildSessionToken(adminEmail)) {
     return null;
   }
 
   return {
     id: 'local-admin',
-    email: defaultEmail,
+    email: adminEmail,
     role: 'admin',
   };
 }
