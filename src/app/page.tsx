@@ -1,448 +1,247 @@
-'use client';
+export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect, useMemo } from 'react';
-import Image from 'next/image';
-import { ChevronRight, Star, Zap, Shield, Truck, Headphones } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowRight, Boxes, CheckCircle2, MapPin, ShieldCheck, Truck, Zap } from 'lucide-react';
+import CategoryIcon from '@/components/CategoryIcon';
 import ProductCard from '@/components/ProductCard';
-import CategoryFilter from '@/components/CategoryFilter';
-import PriceSlider from '@/components/PriceSlider';
-import ProductModal from '@/components/ProductModal';
-import { getAllProducts, getAllCategories, getPopularProducts, getProductsOnSale } from '@/lib/products';
-import { searchProducts } from '@/lib/fuse';
-import { Product, SearchFilters } from '@/types';
+import { getCategories, getFeaturedProducts, getProductsByCategory, getProductsWithCategories } from '@/lib/catalog';
+import { siteConfig } from '@/lib/site';
+import { buildMetadata } from '@/utils/seo';
 
-export default function HomePage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filters, setFilters] = useState<SearchFilters>({
-    categories: [],
-    priceRange: [0, 1000000],
-    sortBy: 'popularity',
-    searchQuery: '',
-  });
-  const [isLoading, setIsLoading] = useState(true);
+export const metadata = buildMetadata({
+  title: 'ElectriBol | Muestrario digital',
+  description:
+    'Muestrario digital de ElectriBol con lamparas LED, cables, reflectores e iluminacion exterior en Cantagallo, Bolivar.',
+  path: '/',
+});
 
-  // Cargar datos iniciales
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const allProducts = getAllProducts();
-        const allCategories = getAllCategories();
-        const popularProducts = getPopularProducts(8);
-        const saleProducts = getProductsOnSale(8);
+const benefits = [
+  {
+    title: 'Asesoria real',
+    text: 'Te ayudamos a elegir productos para vivienda, comercio y obra.',
+    icon: ShieldCheck,
+  },
+  {
+    title: 'Entrega agil',
+    text: 'Atencion rapida por WhatsApp para separar y coordinar pedidos.',
+    icon: Truck,
+  },
+  {
+    title: 'Catalogo util',
+    text: 'Referencias claras, precios en COP y fichas faciles de revisar.',
+    icon: Boxes,
+  },
+  {
+    title: 'Enfoque electrico',
+    text: 'Trabajamos con lo que mas se mueve en instalaciones y alumbrado.',
+    icon: Zap,
+  },
+];
 
-        setProducts(allProducts);
-        setCategories(allCategories);
-        setFilteredProducts(allProducts);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error loading products:', error);
-        setIsLoading(false);
-      }
-    };
+export default async function HomePage() {
+  const [categories, featuredProducts, allProducts] = await Promise.all([
+    getCategories(true),
+    getFeaturedProducts(8),
+    getProductsWithCategories(),
+  ]);
 
-    loadData();
-  }, []);
-
-  // Filtrar y buscar productos
-  useEffect(() => {
-    let filtered = [...products];
-
-    // Filtrar por categorías
-    if (filters.categories.length > 0) {
-      filtered = filtered.filter(product =>
-        filters.categories.includes(product.category)
-      );
-    }
-
-    // Filtrar por rango de precio
-    filtered = filtered.filter(product =>
-      product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1]
-    );
-
-    // Buscar por texto
-    if (filters.searchQuery.trim()) {
-      const searchResults = searchProducts(filtered, filters.searchQuery);
-      filtered = searchResults.map(result => result.item);
-    }
-
-    // Ordenar
-    switch (filters.sortBy) {
-      case 'price-asc':
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-desc':
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case 'newest':
-        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        break;
-      case 'popularity':
-        filtered.sort((a, b) => {
-          if (a.popular && !b.popular) return -1;
-          if (!a.popular && b.popular) return 1;
-          return b.rating - a.rating;
-        });
-        break;
-    }
-
-    setFilteredProducts(filtered);
-  }, [products, filters]);
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    setFilters(prev => ({ ...prev, searchQuery: query }));
-  };
-
-  const handleCategoryChange = (selectedCategories: string[]) => {
-    setFilters(prev => ({ ...prev, categories: selectedCategories }));
-  };
-
-  const handlePriceChange = (priceRange: [number, number]) => {
-    setFilters(prev => ({ ...prev, priceRange }));
-  };
-
-  const handleSortChange = (sortBy: SearchFilters['sortBy']) => {
-    setFilters(prev => ({ ...prev, sortBy }));
-  };
-
-  const handleProductSelect = (product: Product) => {
-    setSelectedProduct(product);
-    setIsModalOpen(true);
-  };
-
-  const handleAddToQuote = (product: Product) => {
-    // Esta función se manejará en el Header
-    console.log('Add to quote:', product);
-  };
-
-  const popularProducts = useMemo(() => getPopularProducts(8), []);
-  const saleProducts = useMemo(() => getProductsOnSale(8), []);
-
-  const getPriceRange = (): [number, number] => {
-    if (products.length === 0) return [0, 1000000];
-    const prices = products.map(p => p.price);
-    return [Math.min(...prices), Math.max(...prices)];
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="loading-spinner"></div>
-      </div>
-    );
-  }
+  const categoryCards = await Promise.all(
+    categories.map(async (category) => ({
+      category,
+      total: (await getProductsByCategory(category.id)).length,
+    }))
+  );
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-electribol-blue to-blue-700 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-                Iluminación de
-                <span className="text-electribol-yellow"> Calidad</span>
+    <div>
+      <section className="section-space pb-8">
+        <div className="shell">
+          <div className="grid items-end gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+            <div className="space-y-6">
+              <p className="eyebrow">Ferreteria electrica en Cantagallo</p>
+              <h1 className="max-w-4xl font-heading text-5xl uppercase leading-[0.92] tracking-[-0.06em] text-eb-900 sm:text-6xl lg:text-7xl">
+                ElectriBol es tu vitrina para iluminacion, cables y soluciones electricas.
               </h1>
-              <p className="text-xl text-blue-100 leading-relaxed">
-                Especialistas en lámparas, cables, reflectores y todo lo relacionado 
-                con alumbrado. Calidad y servicio garantizado.
+              <p className="max-w-2xl text-base leading-7 text-eb-700 sm:text-lg">
+                Sin carrito, sin vueltas. Mira el catalogo, revisa referencias y escribe por WhatsApp
+                para cotizar rapido desde Cantagallo, Bolivar.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Link href="/catalogo" className="btn-primary">
+                  Ver catalogo
+                </Link>
                 <a
-                  href="#productos"
-                  className="btn-primary bg-white text-electribol-blue hover:bg-gray-100"
-                >
-                  Ver Productos
-                </a>
-                <a
-                  href="https://wa.me/573015956954"
+                  href={`https://wa.me/${siteConfig.whatsappNumber}`}
                   target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-outline border-white text-white hover:bg-white hover:text-electribol-blue"
+                  rel="noreferrer"
+                  className="btn-secondary"
                 >
-                  Contactar WhatsApp
+                  WhatsApp
                 </a>
               </div>
             </div>
-            <div className="relative">
-              <div className="aspect-square bg-white/10 rounded-2xl backdrop-blur-sm p-8">
-                <Image
-                  src="/instagram_preview.png"
-                  alt="ElectriBol - Productos de iluminación"
-                  width={500}
-                  height={500}
-                  className="w-full h-full object-cover rounded-xl"
-                  priority
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Features Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-electribol-blue rounded-full flex items-center justify-center mx-auto">
-                <Zap className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900">
-                Productos LED
-              </h3>
-              <p className="text-gray-600">
-                Tecnología LED de última generación para máxima eficiencia energética
-              </p>
-            </div>
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-electribol-yellow rounded-full flex items-center justify-center mx-auto">
-                <Shield className="w-8 h-8 text-text-dark" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900">
-                Calidad Garantizada
-              </h3>
-              <p className="text-gray-600">
-                Productos certificados con garantía extendida y soporte técnico
-              </p>
-            </div>
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
-                <Truck className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900">
-                Envío Rápido
-              </h3>
-              <p className="text-gray-600">
-                Despacho inmediato a toda Colombia con seguimiento en tiempo real
-              </p>
-            </div>
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto">
-                <Headphones className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900">
-                Soporte 24/7
-              </h3>
-              <p className="text-gray-600">
-                Atención personalizada y asesoría técnica especializada
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Categorías Section */}
-      <section id="categorias" className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Nuestras Categorías
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Descubre nuestra amplia gama de productos para iluminación residencial, comercial e industrial
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {categories.slice(0, 10).map((category) => (
-              <button
-                key={category}
-                onClick={() => handleCategoryChange([category])}
-                className="group p-6 bg-white rounded-xl shadow-card hover:shadow-card-hover transition-all duration-200 text-center"
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-electribol-blue to-electribol-yellow rounded-lg mx-auto mb-4 group-hover:scale-110 transition-transform duration-200"></div>
-                <h3 className="font-semibold text-gray-900 group-hover:text-electribol-blue transition-colors duration-200">
-                  {category}
-                </h3>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Productos Destacados */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Productos Destacados
-              </h2>
-              <p className="text-xl text-gray-600">
-                Los productos más populares de nuestra tienda
-              </p>
-            </div>
-            <a
-              href="#productos"
-              className="hidden md:flex items-center space-x-2 text-electribol-blue hover:text-blue-700 transition-colors duration-200"
-            >
-              <span>Ver todos</span>
-              <ChevronRight className="w-5 h-5" />
-            </a>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {popularProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onViewDetails={handleProductSelect}
-                onAddToQuote={handleAddToQuote}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Ofertas */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Ofertas Especiales
-              </h2>
-              <p className="text-xl text-gray-600">
-                Aprovecha nuestros precios especiales por tiempo limitado
-              </p>
-            </div>
-            <a
-              href="#productos"
-              className="hidden md:flex items-center space-x-2 text-electribol-blue hover:text-blue-700 transition-colors duration-200"
-            >
-              <span>Ver todas las ofertas</span>
-              <ChevronRight className="w-5 h-5" />
-            </a>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {saleProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onViewDetails={handleProductSelect}
-                onAddToQuote={handleAddToQuote}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Filtros y Productos */}
-      <section id="productos" className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Todos los Productos
-            </h2>
-            <p className="text-xl text-gray-600">
-              Explora nuestra completa gama de productos de iluminación
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Filtros */}
-            <div className="lg:col-span-1 space-y-6">
-              <CategoryFilter
-                categories={categories}
-                selectedCategories={filters.categories}
-                onCategoryChange={handleCategoryChange}
-              />
-              
-              <PriceSlider
-                minPrice={getPriceRange()[0]}
-                maxPrice={getPriceRange()[1]}
-                value={filters.priceRange}
-                onChange={handlePriceChange}
-              />
-            </div>
-
-            {/* Productos */}
-            <div className="lg:col-span-3">
-              {/* Controles */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-4 sm:space-y-0">
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm text-gray-600">
-                    {filteredProducts.length} productos encontrados
-                  </span>
-                </div>
-                
-                <div className="flex items-center space-x-4">
-                  <label className="text-sm font-medium text-gray-700">
-                    Ordenar por:
-                  </label>
-                  <select
-                    value={filters.sortBy}
-                    onChange={(e) => handleSortChange(e.target.value as SearchFilters['sortBy'])}
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-electribol-blue focus:border-transparent"
-                  >
-                    <option value="popularity">Popularidad</option>
-                    <option value="price-asc">Precio: Menor a Mayor</option>
-                    <option value="price-desc">Precio: Mayor a Menor</option>
-                    <option value="newest">Más Nuevos</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Grid de productos */}
-              {filteredProducts.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredProducts.map((product) => (
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      onViewDetails={handleProductSelect}
-                      onAddToQuote={handleAddToQuote}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Star className="w-12 h-12 text-gray-400" />
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    No se encontraron productos
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Intenta ajustar los filtros o buscar con otros términos
+            <div className="hero-panel relative overflow-hidden p-6">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(41,182,246,0.28),transparent_32%)]" />
+              <div className="relative grid gap-4">
+                <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
+                  <p className="font-heading text-xs uppercase tracking-[0.3em] text-white/70">Siempre visible</p>
+                  <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.04em] text-white">
+                    {allProducts.length} referencias listas para cotizar
                   </p>
-                  <button
-                    onClick={() => {
-                      setFilters({
-                        categories: [],
-                        priceRange: getPriceRange(),
-                        sortBy: 'popularity',
-                        searchQuery: '',
-                      });
-                    }}
-                    className="btn-primary"
-                  >
-                    Limpiar filtros
-                  </button>
                 </div>
-              )}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
+                    <p className="text-sm text-white/70">Ciudad</p>
+                    <p className="mt-2 font-heading text-2xl uppercase tracking-[-0.04em] text-white">
+                      {siteConfig.city}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
+                    <p className="text-sm text-white/70">Horario</p>
+                    <p className="mt-2 text-sm leading-6 text-white">{siteConfig.hours}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Modal de producto */}
-      <ProductModal
-        product={selectedProduct}
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setSelectedProduct(null);
-        }}
-        onAddToQuote={handleAddToQuote}
-      />
+      <section className="section-space border-y border-eb-500/10 bg-white/70">
+        <div className="shell">
+          <div className="mb-8 flex items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">Categorias</p>
+              <h2 className="mt-3 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+                Lo que mas se mueve en el mostrario
+              </h2>
+            </div>
+            <Link href="/catalogo" className="hidden font-heading text-sm uppercase tracking-[0.14em] text-eb-800 md:inline-flex">
+              Ver todo el catalogo
+            </Link>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {categoryCards.map(({ category, total }) => (
+              <Link
+                key={category.id}
+                href={`/catalogo/${category.slug}`}
+                className="surface group p-5 transition hover:border-eb-300/30"
+              >
+                <CategoryIcon name={category.icon} className="h-8 w-8 text-eb-accent" />
+                  <h3 className="mt-6 font-heading text-2xl uppercase tracking-[-0.04em] text-eb-900">
+                    {category.name}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-eb-700">{category.description}</p>
+                  <p className="mt-5 font-heading text-xs uppercase tracking-[0.18em] text-eb-800">
+                    {total} productos
+                  </p>
+                </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-space">
+        <div className="shell space-y-8">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">Productos destacados</p>
+              <h2 className="mt-3 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+                Seleccionados por el admin para vender rapido
+              </h2>
+            </div>
+            <Link href="/catalogo" className="font-heading text-sm uppercase tracking-[0.14em] text-eb-800">
+              Ir al catalogo completo
+            </Link>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-space border-y border-eb-500/10 bg-[linear-gradient(180deg,rgba(21,101,192,0.03),rgba(255,255,255,0.7))]">
+        <div className="shell">
+          <div className="mb-8">
+            <p className="eyebrow">Por que elegirnos</p>
+            <h2 className="mt-3 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+              Un catalogo hecho para cotizar rapido
+            </h2>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {benefits.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.title} className="surface p-5">
+                  <Icon className="h-8 w-8 text-eb-accent" />
+                  <h3 className="mt-6 font-heading text-2xl uppercase tracking-[-0.04em] text-eb-900">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-eb-700">{item.text}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-space">
+        <div className="shell">
+          <div className="surface grid gap-8 p-6 md:grid-cols-[1fr_0.9fr] md:p-8">
+            <div className="space-y-4">
+              <p className="eyebrow">Contacto directo</p>
+              <h2 className="font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+                Escribenos y te ayudamos a encontrar la referencia correcta.
+              </h2>
+              <p className="max-w-2xl text-sm leading-7 text-eb-700">
+                Atendemos consultas por WhatsApp, telefono y correo. Si estas armando una lista
+                para vivienda, local o proyecto, podemos apoyarte con referencias y disponibilidad.
+              </p>
+              <div className="flex flex-col gap-3 text-sm text-eb-800">
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-4 w-4 text-eb-accent" />
+                  <span>{siteConfig.address}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="h-4 w-4 text-eb-accent" />
+                  <span>{siteConfig.hours}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="hero-panel flex flex-col justify-between gap-5 p-6">
+              <div>
+                <p className="font-heading text-sm uppercase tracking-[0.14em] text-white/70">
+                  WhatsApp directo
+                </p>
+                <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.04em] text-white">
+                  {siteConfig.whatsappDisplay}
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <a
+                  href={`https://wa.me/${siteConfig.whatsappNumber}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-primary"
+                >
+                  Abrir chat
+                </a>
+                <Link href="/contacto" className="btn-secondary">
+                  Ver contacto
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

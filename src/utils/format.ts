@@ -1,6 +1,3 @@
-/**
- * Formatea texto removiendo acentos y normalizando
- */
 export function normalizeText(text: string): string {
   return text
     .normalize('NFD')
@@ -9,52 +6,38 @@ export function normalizeText(text: string): string {
     .trim();
 }
 
-/**
- * Trunca texto a una longitud específica
- */
-export function truncateText(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text;
-  return text.substring(0, maxLength).trim() + '...';
-}
-
-/**
- * Genera slug a partir de texto
- */
 export function generateSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+  return normalizeText(text)
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim();
+    .replace(/-+/g, '-');
 }
 
-/**
- * Formatea fecha para mostrar
- */
+export function formatCurrency(value: number | null): string {
+  if (value === null) {
+    return 'Precio a consultar';
+  }
+
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
 export function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('es-CO', {
+  return new Intl.DateTimeFormat('es-CO', {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
-  });
+  }).format(new Date(dateString));
 }
 
-/**
- * Valida formato de email
- */
-export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
+export function truncateText(text: string, maxLength: number): string {
+  if (text.length <= maxLength) {
+    return text;
+  }
 
-/**
- * Valida formato de teléfono colombiano
- */
-export function isValidPhone(phone: string): boolean {
-  const phoneRegex = /^(\+57|57)?[1-9]\d{9}$/;
-  return phoneRegex.test(phone.replace(/\s/g, ''));
+  return `${text.slice(0, maxLength).trim()}...`;
 }

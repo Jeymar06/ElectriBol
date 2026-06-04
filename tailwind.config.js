@@ -6,32 +6,41 @@ module.exports = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    screens: {
+      xs: '480px',
+      sm: '768px',
+      md: '990px',
+      lg: '1200px',
+    },
     extend: {
       colors: {
-        'electribol-blue': '#0A5FFF',
-        'electribol-yellow': '#FFD400',
-        'electribol-white': '#FFFFFF',
-        'text-dark': '#0F172A',
+        eb: {
+          900: '#020d1a',
+          800: '#061e3a',
+          700: '#0a3260',
+          600: '#0f4a8a',
+          500: '#1565c0',
+          400: '#1e88e5',
+          300: '#42a5f5',
+          200: '#90caf9',
+          100: '#bbdefb',
+          50: '#e3f2fd',
+          accent: '#29b6f6',
+          error: '#e12f1d',
+          offer: '#f59e0b',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-      },
-      boxShadow: {
-        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        heading: ['var(--font-heading)', 'sans-serif'],
+        sans: ['var(--font-body)', 'sans-serif'],
       },
       animation: {
-        'fade-in': 'fadeIn 0.3s ease-in-out',
-        'slide-up': 'slideUp 0.3s ease-out',
+        'fade-in': 'fadeIn 0.5s ease-out',
       },
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
-        },
-        slideUp: {
-          '0%': { transform: 'translateY(10px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
         },
       },
     },

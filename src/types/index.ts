@@ -1,54 +1,77 @@
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  icon: string;
+  active: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface Product {
   id: string;
-  title: string;
-  category: string;
-  price: number;
-  currency: string;
-  images: string[];
+  slug: string;
+  name: string;
+  reference: string;
+  categoryId: string;
+  price: number | null;
+  compareAtPrice: number | null;
+  priceOnRequest: boolean;
+  unit: string;
   shortDescription: string;
   description: string;
-  tags: string[];
-  sku: string;
-  stock: number;
-  dimensions?: {
-    width: string;
-    height: string;
-    depth: string;
-  };
-  rating: number;
+  images: string[];
+  available: boolean;
+  featured: boolean;
   createdAt: string;
-  popular: boolean;
+  updatedAt: string;
 }
 
-export interface SearchFilters {
-  categories: string[];
-  priceRange: [number, number];
-  sortBy: 'price-asc' | 'price-desc' | 'newest' | 'popularity';
-  searchQuery: string;
-}
-
-export interface QuoteItem {
+export interface Profile {
   id: string;
-  title: string;
-  price: number;
-  quantity: number;
-  sku: string;
+  email: string;
+  role: 'admin' | 'editor';
+  fullName?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export interface ContactForm {
-  name: string;
-  email: string;
-  phone: string;
-  subject: string;
-  message: string;
+export interface ProductWithCategory extends Product {
+  category?: Category;
 }
 
-export interface CompanyInfo {
+export interface ProductPayload {
+  id?: string;
   name: string;
-  address: string;
-  phone: string;
-  whatsapp: string;
-  email: string;
-  hours: string;
-  googleMapsEmbedKey?: string;
+  reference: string;
+  categoryId: string;
+  price: number | null;
+  compareAtPrice: number | null;
+  priceOnRequest: boolean;
+  unit: string;
+  shortDescription: string;
+  description: string;
+  images: string[];
+  available: boolean;
+  featured: boolean;
+}
+
+export interface CategoryPayload {
+  id?: string;
+  name: string;
+  description: string;
+  icon: string;
+  active: boolean;
+}
+
+export interface CatalogFilters {
+  query: string;
+  category: string;
+  availableOnly: boolean;
+}
+
+export interface AdminSession {
+  authenticated: boolean;
+  email?: string;
 }

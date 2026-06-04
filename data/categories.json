@@ -1,0 +1,42 @@
+[
+  {
+    "id": "lamparas-led",
+    "name": "Lamparas LED",
+    "slug": "lamparas-led",
+    "description": "Bombillos, paneles y soluciones LED para interiores.",
+    "icon": "Lightbulb",
+    "active": true
+  },
+  {
+    "id": "cables-electricos",
+    "name": "Cables Electricos",
+    "slug": "cables-electricos",
+    "description": "Cables por metro para instalaciones residenciales y comerciales.",
+    "icon": "Cable",
+    "active": true
+  },
+  {
+    "id": "reflectores",
+    "name": "Reflectores",
+    "slug": "reflectores",
+    "description": "Reflectores LED para exteriores y zonas de trabajo.",
+    "icon": "LampWallUp",
+    "active": true
+  },
+  {
+    "id": "iluminacion-exterior",
+    "name": "Iluminacion Exterior",
+    "slug": "iluminacion-exterior",
+    "description": "Sensores, luminarias solares y automatizacion exterior.",
+    "icon": "ShieldHalf",
+    "active": true
+  },
+  {
+    "id": "accesorios",
+    "name": "Accesorios",
+    "slug": "accesorios",
+    "description": "Tomacorrientes, breakers y accesorios electricos.",
+    "icon": "Boxes",
+    "active": true
+  }
+]
