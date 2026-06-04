@@ -1,10 +1,11 @@
 export const dynamic = 'force-dynamic';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { ChevronRight, MessageCircle } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
-import ProductImage from '@/components/ProductImage';
+import ProductImage, { buildPlaceholder } from '@/components/ProductImage';
 import { getProductBySlug, getRelatedProducts } from '@/lib/catalog';
 import { buildProductWhatsAppUrl } from '@/lib/site';
 import { formatCurrency } from '@/utils/format';
@@ -59,15 +60,28 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
         <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="space-y-4">
             <div className="surface overflow-hidden">
-              <div className="aspect-[4/3]">
-                <ProductImage product={product} className="h-full w-full object-cover" />
+              <div className="relative aspect-[4/3]">
+                <ProductImage
+                  product={product}
+                  fill
+                  priority
+                  sizes="(max-width: 990px) 100vw, 55vw"
+                  className="h-full w-full object-cover"
+                />
               </div>
             </div>
             {imageList.length > 1 ? (
               <div className="grid grid-cols-4 gap-3">
                 {imageList.map((image, index) => (
                   <div key={`${image}-${index}`} className="surface overflow-hidden">
-                    <img src={image || ''} alt={`${product.name} ${index + 1}`} className="aspect-[4/3] w-full object-cover" />
+                    <Image
+                      src={image || buildPlaceholder(product)}
+                      alt={`${product.name} ${index + 1}`}
+                      width={400}
+                      height={300}
+                      unoptimized={!image || image.startsWith('data:')}
+                      className="aspect-[4/3] h-auto w-full object-cover"
+                    />
                   </div>
                 ))}
               </div>
@@ -95,7 +109,9 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
               </p>
             </div>
 
-            <p className="mt-8 text-base leading-7 text-eb-700">{product.description}</p>
+            <div className="mt-8 rounded-2xl bg-[linear-gradient(180deg,#f7fbff_0%,#ffffff_100%)] p-5">
+              <p className="text-base leading-7 text-eb-700">{product.description}</p>
+            </div>
 
             <a
               href={buildProductWhatsAppUrl(product.name, product.reference)}

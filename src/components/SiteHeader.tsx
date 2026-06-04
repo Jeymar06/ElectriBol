@@ -86,6 +86,10 @@ export default function SiteHeader() {
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
+      <div className="shell hidden items-center justify-between border-t border-eb-500/10 py-3 text-[11px] font-heading uppercase tracking-[0.18em] text-eb-700 md:flex">
+        <span>Paneles LED, cables, reflectores y accesorios</span>
+        <span>{siteConfig.hours}</span>
+      </div>
 
       {open && (
         <div className="border-t border-eb-500/10 bg-white md:hidden">

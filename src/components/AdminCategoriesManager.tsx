@@ -93,7 +93,7 @@ export default function AdminCategoriesManager({ initialCategories }: { initialC
   return (
     <div className="space-y-6">
       {toast ? (
-        <div className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-100">
+        <div className="rounded-xl border border-emerald-400/30 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           {toast}
         </div>
       ) : null}
@@ -101,7 +101,7 @@ export default function AdminCategoriesManager({ initialCategories }: { initialC
       <div className="surface flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="eyebrow">Gestion de categorias</p>
-          <h2 className="mt-2 font-heading text-3xl uppercase tracking-[-0.04em] text-white">
+          <h2 className="mt-2 font-heading text-3xl uppercase tracking-[-0.04em] text-eb-900">
             Familias del catalogo
           </h2>
         </div>
@@ -112,8 +112,8 @@ export default function AdminCategoriesManager({ initialCategories }: { initialC
       </div>
 
       <div className="surface overflow-x-auto">
-        <table className="min-w-full text-sm text-eb-100">
-          <thead className="border-b border-eb-300/10 text-left font-heading text-xs uppercase tracking-[0.14em] text-eb-200">
+        <table className="min-w-full text-sm text-eb-800">
+          <thead className="border-b border-eb-300/10 text-left font-heading text-xs uppercase tracking-[0.14em] text-eb-700">
             <tr>
               <th className="px-4 py-4">Nombre</th>
               <th className="px-4 py-4">Descripcion</th>
@@ -126,13 +126,13 @@ export default function AdminCategoriesManager({ initialCategories }: { initialC
               <tr key={category.id} className="border-b border-eb-300/10 last:border-b-0">
                 <td className="px-4 py-4">
                   <div>
-                    <p className="font-heading text-lg uppercase tracking-[-0.03em] text-white">
+                    <p className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
                       {category.name}
                     </p>
-                    <p className="text-xs uppercase tracking-[0.16em] text-eb-200">{category.icon}</p>
+                    <p className="text-xs uppercase tracking-[0.16em] text-eb-700">{category.icon}</p>
                   </div>
                 </td>
-                <td className="px-4 py-4 text-eb-200">{category.description}</td>
+                <td className="px-4 py-4 text-eb-700">{category.description}</td>
                 <td className="px-4 py-4">
                   <input
                     type="checkbox"
@@ -161,7 +161,7 @@ export default function AdminCategoriesManager({ initialCategories }: { initialC
           <div className="mb-6 flex items-center justify-between">
             <div>
               <p className="eyebrow">{editing.id ? 'Editar categoria' : 'Crear categoria'}</p>
-              <h3 className="mt-2 font-heading text-3xl uppercase tracking-[-0.04em] text-white">
+              <h3 className="mt-2 font-heading text-3xl uppercase tracking-[-0.04em] text-eb-900">
                 {editing.name || 'Nueva categoria'}
               </h3>
             </div>
@@ -204,7 +204,7 @@ export default function AdminCategoriesManager({ initialCategories }: { initialC
             />
           </div>
 
-          <label className="mt-4 inline-flex items-center gap-2 text-sm text-eb-100">
+          <label className="mt-4 inline-flex items-center gap-2 text-sm text-eb-800">
             <input
               type="checkbox"
               checked={editing.active}

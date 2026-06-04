@@ -24,7 +24,7 @@ export default function AdminNav() {
     <div className="surface flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
       <div>
         <p className="eyebrow">Superadmin</p>
-        <h1 className="mt-2 font-heading text-3xl uppercase tracking-[-0.04em] text-white">
+        <h1 className="mt-2 font-heading text-3xl uppercase tracking-[-0.04em] text-eb-900">
           Panel ElectriBol
         </h1>
       </div>
@@ -41,7 +41,7 @@ export default function AdminNav() {
               className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 font-heading text-xs uppercase tracking-[0.14em] transition ${
                 active
                   ? 'bg-eb-50 text-eb-900'
-                  : 'border border-eb-300/20 text-eb-100 hover:border-eb-300/40'
+                  : 'border border-eb-300/20 text-eb-700 hover:border-eb-300/40 hover:text-eb-900'
               }`}
             >
               <Icon className="h-4 w-4" />

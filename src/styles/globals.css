@@ -63,7 +63,7 @@
   }
 
   .section-space {
-    @apply py-12 md:py-16 lg:py-20;
+    @apply py-14 md:py-20 lg:py-24;
   }
 
   .eyebrow {
@@ -114,6 +114,17 @@
 
   .hero-panel {
     @apply rounded-[28px] border border-eb-500/10 bg-[linear-gradient(145deg,#0f4a8a_0%,#113563_55%,#0b2242_100%)] text-white shadow-[0_26px_80px_rgba(17,53,99,0.24)];
+  }
+
+  .display-title {
+    @apply font-heading uppercase tracking-[-0.06em] text-eb-900;
+  }
+
+  .editorial-grid {
+    background-image:
+      linear-gradient(rgba(21, 101, 192, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(21, 101, 192, 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
   }
 }
 

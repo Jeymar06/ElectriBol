@@ -54,12 +54,12 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="section-space pb-8">
+      <section className="section-space editorial-grid pb-10">
         <div className="shell">
-          <div className="grid items-end gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-            <div className="space-y-6">
+          <div className="grid items-end gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="space-y-7">
               <p className="eyebrow">Ferreteria electrica en Cantagallo</p>
-              <h1 className="max-w-4xl font-heading text-5xl uppercase leading-[0.92] tracking-[-0.06em] text-eb-900 sm:text-6xl lg:text-7xl">
+              <h1 className="display-title max-w-5xl text-5xl leading-[0.92] sm:text-6xl lg:text-7xl">
                 ElectriBol es tu vitrina para iluminacion, cables y soluciones electricas.
               </h1>
               <p className="max-w-2xl text-base leading-7 text-eb-700 sm:text-lg">
@@ -79,10 +79,31 @@ export default async function HomePage() {
                   WhatsApp
                 </a>
               </div>
+              <div className="grid max-w-2xl grid-cols-2 gap-4 pt-2 sm:grid-cols-3">
+                <div className="surface p-4">
+                  <p className="font-heading text-xs uppercase tracking-[0.18em] text-eb-600">Cobertura</p>
+                  <p className="mt-3 font-heading text-2xl uppercase tracking-[-0.04em] text-eb-900">
+                    Cantagallo
+                  </p>
+                </div>
+                <div className="surface p-4">
+                  <p className="font-heading text-xs uppercase tracking-[0.18em] text-eb-600">Consulta</p>
+                  <p className="mt-3 font-heading text-2xl uppercase tracking-[-0.04em] text-eb-900">
+                    WhatsApp
+                  </p>
+                </div>
+                <div className="surface col-span-2 p-4 sm:col-span-1">
+                  <p className="font-heading text-xs uppercase tracking-[0.18em] text-eb-600">Foco</p>
+                  <p className="mt-3 font-heading text-2xl uppercase tracking-[-0.04em] text-eb-900">
+                    LED &amp; Energia
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <div className="hero-panel relative overflow-hidden p-6">
+            <div className="hero-panel relative overflow-hidden p-7">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(41,182,246,0.28),transparent_32%)]" />
+              <div className="absolute inset-y-0 right-12 hidden w-px bg-white/10 lg:block" />
               <div className="relative grid gap-4">
                 <div className="rounded-2xl border border-white/10 bg-white/10 p-5">
                   <p className="font-heading text-xs uppercase tracking-[0.3em] text-white/70">Siempre visible</p>
@@ -113,7 +134,7 @@ export default async function HomePage() {
           <div className="mb-8 flex items-end justify-between gap-4">
             <div>
               <p className="eyebrow">Categorias</p>
-              <h2 className="mt-3 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+              <h2 className="display-title mt-3 text-4xl">
                 Lo que mas se mueve en el mostrario
               </h2>
             </div>
@@ -127,7 +148,7 @@ export default async function HomePage() {
               <Link
                 key={category.id}
                 href={`/catalogo/${category.slug}`}
-                className="surface group p-5 transition hover:border-eb-300/30"
+                className="surface group p-5 transition hover:-translate-y-1 hover:border-eb-300/30"
               >
                 <CategoryIcon name={category.icon} className="h-8 w-8 text-eb-accent" />
                   <h3 className="mt-6 font-heading text-2xl uppercase tracking-[-0.04em] text-eb-900">
@@ -148,7 +169,7 @@ export default async function HomePage() {
           <div className="flex items-end justify-between gap-4">
             <div>
               <p className="eyebrow">Productos destacados</p>
-              <h2 className="mt-3 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+              <h2 className="display-title mt-3 text-4xl">
                 Seleccionados por el admin para vender rapido
               </h2>
             </div>
@@ -169,7 +190,7 @@ export default async function HomePage() {
         <div className="shell">
           <div className="mb-8">
             <p className="eyebrow">Por que elegirnos</p>
-            <h2 className="mt-3 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+            <h2 className="display-title mt-3 text-4xl">
               Un catalogo hecho para cotizar rapido
             </h2>
           </div>
@@ -196,7 +217,7 @@ export default async function HomePage() {
           <div className="surface grid gap-8 p-6 md:grid-cols-[1fr_0.9fr] md:p-8">
             <div className="space-y-4">
               <p className="eyebrow">Contacto directo</p>
-              <h2 className="font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+              <h2 className="display-title text-4xl">
                 Escribenos y te ayudamos a encontrar la referencia correcta.
               </h2>
               <p className="max-w-2xl text-sm leading-7 text-eb-700">

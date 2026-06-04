@@ -9,9 +9,11 @@ export default function ProductCard({ product }: { product: ProductWithCategory 
   return (
     <article className="surface group overflow-hidden">
       <Link href={`/producto/${product.slug}`} className="block">
-        <div className="aspect-[4/3] overflow-hidden border-b border-[rgba(144,202,249,0.12)]">
+        <div className="relative aspect-[4/3] overflow-hidden border-b border-[rgba(144,202,249,0.12)]">
           <ProductImage
             product={product}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
           />
         </div>

@@ -12,6 +12,7 @@ export default function SiteFooter() {
             Iluminacion, cables y soluciones electricas para tu proyecto.
           </h2>
           <p className="max-w-xl text-sm text-eb-700">{siteConfig.description}</p>
+          <div className="h-px w-24 bg-eb-500/20" />
         </div>
 
         <div className="space-y-4 text-sm text-eb-700">

@@ -30,10 +30,10 @@ export default async function AdminDashboardPage() {
           return (
             <div key={item.label} className="stat-card">
               <div className="flex items-center justify-between">
-                <p className="font-heading text-xs uppercase tracking-[0.14em] text-eb-200">{item.label}</p>
+                <p className="font-heading text-xs uppercase tracking-[0.14em] text-eb-700">{item.label}</p>
                 <Icon className="h-5 w-5 text-eb-accent" />
               </div>
-              <p className="mt-6 font-heading text-5xl uppercase tracking-[-0.06em] text-white">
+              <p className="mt-6 font-heading text-5xl uppercase tracking-[-0.06em] text-eb-900">
                 {item.value}
               </p>
             </div>
@@ -49,10 +49,10 @@ export default async function AdminDashboardPage() {
               const total = products.filter((product) => product.categoryId === category.id).length;
               return (
                 <div key={category.id} className="flex items-center justify-between border-b border-eb-300/10 pb-4 last:border-b-0 last:pb-0">
-                  <span className="font-heading text-lg uppercase tracking-[-0.03em] text-white">
+                  <span className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
                     {category.name}
                   </span>
-                  <span className="text-sm text-eb-200">{total} productos</span>
+                  <span className="text-sm text-eb-700">{total} productos</span>
                 </div>
               );
             })}
@@ -65,14 +65,14 @@ export default async function AdminDashboardPage() {
             {products.slice(0, 5).map((product) => (
               <div key={product.id} className="flex items-center justify-between border-b border-eb-300/10 pb-4 last:border-b-0 last:pb-0">
                 <div>
-                  <p className="font-heading text-lg uppercase tracking-[-0.03em] text-white">
+                  <p className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
                     {product.name}
                   </p>
-                  <p className="text-xs uppercase tracking-[0.16em] text-eb-200">
+                  <p className="text-xs uppercase tracking-[0.16em] text-eb-700">
                     {product.category?.name || 'Sin categoria'} | Ref. {product.reference}
                   </p>
                 </div>
-                <span className="text-sm text-eb-200">{product.available ? 'Disponible' : 'Sin stock'}</span>
+                <span className="text-sm text-eb-700">{product.available ? 'Disponible' : 'Sin stock'}</span>
               </div>
             ))}
           </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { GripVertical, ImagePlus, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { Category, ProductWithCategory } from '@/types';
@@ -197,7 +198,7 @@ export default function AdminProductsManager({
   return (
     <div className="space-y-6">
       {toast ? (
-        <div className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-100">
+        <div className="rounded-xl border border-emerald-400/30 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           {toast}
         </div>
       ) : null}
@@ -205,7 +206,7 @@ export default function AdminProductsManager({
       <div className="surface flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="eyebrow">Gestion de productos</p>
-          <h2 className="mt-2 font-heading text-3xl uppercase tracking-[-0.04em] text-white">
+          <h2 className="mt-2 font-heading text-3xl uppercase tracking-[-0.04em] text-eb-900">
             Catalogo editable
           </h2>
         </div>
@@ -220,8 +221,8 @@ export default function AdminProductsManager({
       </div>
 
       <div className="surface overflow-x-auto">
-        <table className="min-w-full text-sm text-eb-100">
-          <thead className="border-b border-eb-300/10 text-left font-heading text-xs uppercase tracking-[0.14em] text-eb-200">
+        <table className="min-w-full text-sm text-eb-800">
+          <thead className="border-b border-eb-300/10 text-left font-heading text-xs uppercase tracking-[0.14em] text-eb-700">
             <tr>
               <th className="px-4 py-4">Producto</th>
               <th className="px-4 py-4">Categoria</th>
@@ -236,18 +237,21 @@ export default function AdminProductsManager({
               <tr key={product.id} className="border-b border-eb-300/10 last:border-b-0">
                 <td className="px-4 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="h-16 w-20 overflow-hidden rounded-lg border border-eb-300/10 bg-eb-800">
-                      <img
+                    <div className="relative h-16 w-20 overflow-hidden rounded-lg border border-eb-300/10 bg-eb-100">
+                      <Image
                         src={product.images[0] || '/og-electribol.svg'}
                         alt={product.name}
+                        fill
+                        sizes="80px"
+                        unoptimized={Boolean(product.images[0]?.startsWith('data:'))}
                         className="h-full w-full object-cover"
                       />
                     </div>
                     <div>
-                      <p className="font-heading text-lg uppercase tracking-[-0.03em] text-white">
+                      <p className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
                         {product.name}
                       </p>
-                      <p className="text-xs uppercase tracking-[0.16em] text-eb-200">
+                      <p className="text-xs uppercase tracking-[0.16em] text-eb-700">
                         Ref. {product.reference}
                       </p>
                     </div>
@@ -292,7 +296,7 @@ export default function AdminProductsManager({
           <div className="mb-6 flex items-center justify-between">
             <div>
               <p className="eyebrow">{editing.id ? 'Editar producto' : 'Crear producto'}</p>
-              <h3 className="mt-2 font-heading text-3xl uppercase tracking-[-0.04em] text-white">
+              <h3 className="mt-2 font-heading text-3xl uppercase tracking-[-0.04em] text-eb-900">
                 {editing.id ? editing.name || 'Editar referencia' : 'Nueva referencia'}
               </h3>
             </div>
@@ -361,7 +365,7 @@ export default function AdminProductsManager({
             </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-4 text-sm text-eb-100">
+          <div className="mt-4 flex flex-wrap gap-4 text-sm text-eb-800">
             <label className="inline-flex items-center gap-2">
               <input
                 type="checkbox"
@@ -429,7 +433,7 @@ export default function AdminProductsManager({
             </div>
 
             <div
-              className="rounded-2xl border border-dashed border-eb-300/20 p-4 text-sm text-eb-200"
+              className="rounded-2xl border border-dashed border-eb-300/30 bg-eb-50/60 p-4 text-sm text-eb-700"
               onDragOver={(event) => event.preventDefault()}
               onDrop={(event) => {
                 event.preventDefault();
@@ -443,7 +447,7 @@ export default function AdminProductsManager({
               {editing.images.map((image, index) => (
                 <div
                   key={`${image}-${index}`}
-                  className="rounded-2xl border border-eb-300/10 bg-eb-900/40 p-2"
+                  className="rounded-2xl border border-eb-300/10 bg-white p-2 shadow-sm"
                   draggable
                   onDragStart={() => setDragIndex(index)}
                   onDragOver={(event) => event.preventDefault()}
@@ -454,7 +458,7 @@ export default function AdminProductsManager({
                     }
                   }}
                 >
-                  <div className="mb-2 flex items-center justify-between text-xs text-eb-200">
+                  <div className="mb-2 flex items-center justify-between text-xs text-eb-700">
                     <div className="inline-flex items-center gap-2">
                       <GripVertical className="h-4 w-4" />
                       {index === 0 ? 'Principal' : `Imagen ${index + 1}`}
@@ -471,7 +475,13 @@ export default function AdminProductsManager({
                       <X className="h-4 w-4" />
                     </button>
                   </div>
-                  <img src={image} alt={`Preview ${index + 1}`} className="aspect-[4/3] w-full rounded-xl object-cover" />
+                  <Image
+                    src={image}
+                    alt={`Preview ${index + 1}`}
+                    width={400}
+                    height={300}
+                    className="aspect-[4/3] h-auto w-full rounded-xl object-cover"
+                  />
                 </div>
               ))}
             </div>
