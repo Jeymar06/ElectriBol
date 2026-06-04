@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: 'ElectriBol',
-  tagline: 'Muestrario digital de ferreteria electrica en Cantagallo, Bolivar',
+  tagline: 'Iluminacion, cables y accesorios electricos en Cantagallo, Bolivar',
   description:
-    'Lamparas LED, cables electricos, reflectores y accesorios para hogares, comercios y proyectos electricos.',
+    'Encuentra lamparas LED, cables electricos, reflectores y accesorios para tu hogar, negocio o proyecto.',
   city: 'Cantagallo, Bolivar',
   address: 'Carrera 3 #11-30, Barrio 23 de enero, Cantagallo, Bolivar',
   coordinates: {
@@ -29,6 +29,6 @@ export function createWhatsAppUrl(message: string): string {
 
 export function buildProductWhatsAppUrl(name: string, reference: string): string {
   return createWhatsAppUrl(
-    `Hola, me interesa *${name}* (Ref: ${reference}). ¿Me pueden dar mas informacion?`
+    `Hola, me interesa *${name}* (Ref: ${reference}). Me pueden dar mas informacion?`
   );
 }

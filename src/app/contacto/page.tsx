@@ -16,13 +16,13 @@ export default function ContactPage() {
           <div>
             <p className="eyebrow">Contacto</p>
             <h1 className="mt-3 font-heading text-5xl uppercase tracking-[-0.06em] text-eb-900">
-              Estamos listos para ayudarte con tu pedido.
+              Habla con nosotros y encuentra lo que necesitas.
             </h1>
           </div>
 
           <p className="max-w-2xl text-base leading-7 text-eb-700">
             Si ya viste una referencia en el catalogo, escribenos por WhatsApp. Si todavia estas
-            definiendo materiales, tambien podemos orientarte.
+            comparando opciones, tambien te ayudamos a elegir.
           </p>
 
           <div className="space-y-4 text-sm text-eb-800">
@@ -58,14 +58,14 @@ export default function ContactPage() {
 
         <section className="surface flex flex-col gap-6 p-6 md:p-8">
           <div>
-            <p className="eyebrow">Canal recomendado</p>
+            <p className="eyebrow">Atencion inmediata</p>
             <h2 className="mt-3 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
-              WhatsApp directo para cotizaciones.
+              WhatsApp directo para consultas y pedidos.
             </h2>
           </div>
           <p className="text-base leading-7 text-eb-700">
-            Horario de atencion: {siteConfig.hours}. Responde con la referencia o una foto de lo
-            que necesitas y te ayudamos a ubicarlo.
+            Horario de atencion: {siteConfig.hours}. Envianos la referencia, una foto o una breve
+            descripcion y te ayudamos a encontrar la mejor opcion.
           </p>
           <a
             href={`https://wa.me/${siteConfig.whatsappNumber}`}
@@ -80,7 +80,7 @@ export default function ContactPage() {
             title="Ubicacion ElectriBol"
             className="min-h-[320px] w-full rounded-2xl border border-eb-300/10"
             loading="lazy"
-            src="https://maps.google.com/maps?q=Carrera%203%20%2311-30%2C%20Cantagallo%2C%20Bolivar&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            src={siteConfig.googleMapsEmbedUrl}
           />
         </section>
       </div>

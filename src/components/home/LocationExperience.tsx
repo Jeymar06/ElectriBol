@@ -41,12 +41,11 @@ export default function LocationExperience() {
           <div className="space-y-5">
             <p className="eyebrow">Ubicacion y ruta</p>
             <h2 className="display-title text-4xl sm:text-5xl">
-              Un punto fisico claro para visitas, retiros y consultas locales.
+              Encuentranos facil y llega directo al local.
             </h2>
             <p className="max-w-2xl text-base leading-8 text-eb-700">
-              Integramos una experiencia de mapa mas util para negocio local: ubicacion visual,
-              acceso directo a Google Maps y boton para calcular la ruta desde el telefono del
-              cliente.
+              Consulta la ubicacion, abre el recorrido en Google Maps o calcula la ruta desde tu
+              celular para visitarnos con mas facilidad.
             </p>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -60,7 +59,7 @@ export default function LocationExperience() {
               <div className="glass-slab p-5">
                 <Phone className="h-6 w-6 text-eb-accent" />
                 <p className="mt-4 font-heading text-xl uppercase tracking-[-0.04em] text-eb-900">
-                  Atencion
+                  Horario
                 </p>
                 <p className="mt-3 text-sm leading-7 text-eb-700">{siteConfig.hours}</p>
               </div>

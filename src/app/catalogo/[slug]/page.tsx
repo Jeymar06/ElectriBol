@@ -59,14 +59,14 @@ export default async function CatalogCategoryPage({ params }: { params: { slug: 
 
             <div className="glass-slab p-6">
               <p className="font-heading text-[11px] uppercase tracking-[0.2em] text-eb-700">
-                Navegacion guiada
+                Mas opciones para ti
               </p>
               <p className="mt-4 font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
-                Todo el catalogo mantiene el mismo lenguaje visual.
+                Explora esta categoria y compara las referencias disponibles.
               </p>
               <p className="mt-4 text-sm leading-7 text-eb-700">
-                Esta vista conserva el filtro activo de la categoria pero sigue permitiendo buscar,
-                comparar y saltar a otras familias sin perder contexto.
+                Aqui puedes revisar los productos de esta familia y, si lo necesitas, volver al
+                catalogo completo para seguir comparando.
               </p>
             </div>
           </div>

@@ -24,11 +24,11 @@ export default async function CatalogPage() {
             <div className="space-y-5">
               <p className="eyebrow">Catalogo completo</p>
               <h1 className="display-title text-5xl sm:text-6xl">
-                Busca por categoria, referencia o disponibilidad sin perder el ritmo.
+                Encuentra mas rapido la referencia que estas buscando.
               </h1>
               <p className="max-w-2xl text-base leading-8 text-eb-700">
-                Extendimos la experiencia de la home al catalogo: menos sensacion de tablero,
-                mas continuidad editorial, filtros claros y mejor foco en producto.
+                Revisa por categoria, busca por nombre o referencia y filtra por disponibilidad
+                para encontrar justo lo que necesitas.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link href="/contacto" className="btn-primary">
@@ -49,7 +49,7 @@ export default async function CatalogPage() {
                   Busqueda rapida
                 </p>
                 <p className="mt-3 text-sm leading-7 text-eb-700">
-                  Busca por nombre, referencia o familia sin salir del flujo de compra.
+                  Escribe el nombre, la referencia o la categoria para ubicar productos mas rapido.
                 </p>
               </div>
               <div className="glass-slab p-5">
@@ -58,7 +58,7 @@ export default async function CatalogPage() {
                   Filtros utiles
                 </p>
                 <p className="mt-3 text-sm leading-7 text-eb-700">
-                  Categorias y disponibilidad listas para filtrar lo que realmente importa.
+                  Organiza el catalogo por disponibilidad y categoria para comparar con mas facilidad.
                 </p>
               </div>
             </div>

@@ -24,23 +24,23 @@ export const metadata = buildMetadata({
 
 const benefits = [
   {
-    title: 'Asesoria real',
-    text: 'Te ayudamos a elegir referencias para vivienda, comercio, obra o reposicion rapida.',
+    title: 'Asesoria confiable',
+    text: 'Te ayudamos a elegir lo que mejor se ajusta a tu hogar, negocio o proyecto.',
     icon: ShieldCheck,
   },
   {
-    title: 'Movimiento comercial',
-    text: 'La interfaz ahora muestra mejor el ritmo del negocio: categorias, destacados y contacto directo.',
+    title: 'Compra mas clara',
+    text: 'Encuentra rapido categorias, referencias destacadas y formas de contacto sin dar vueltas.',
     icon: Sparkles,
   },
   {
     title: 'Atencion local',
-    text: 'Mapa, WhatsApp, direccion y rutas listas para que el cliente llegue o escriba sin friccion.',
+    text: 'Tienes a mano direccion, WhatsApp y ruta para visitarnos o consultarnos cuando quieras.',
     icon: Truck,
   },
   {
-    title: 'Foco electrico',
-    text: 'Todo el lenguaje visual gira alrededor de energia, luz, precision tecnica y velocidad.',
+    title: 'Variedad electrica',
+    text: 'Desde iluminacion hasta accesorios, reunimos lo que mas necesitas para tus instalaciones.',
     icon: Zap,
   },
 ];
@@ -94,9 +94,9 @@ export default async function HomePage() {
         <div className="shell">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl space-y-4">
-              <p className="eyebrow">Categorias fluidas</p>
+              <p className="eyebrow">Categorias</p>
               <h2 className="display-title text-4xl sm:text-5xl">
-                Menos bloques sueltos, mas continuidad visual y mas producto al frente.
+                Encuentra lo que buscas por tipo de producto.
               </h2>
             </div>
             <Link
@@ -141,14 +141,13 @@ export default async function HomePage() {
         <div className="shell">
           <div className="feature-ribbon">
             <div className="max-w-2xl space-y-4">
-              <p className="eyebrow">Movimiento y ritmo</p>
+              <p className="eyebrow">Por que elegirnos</p>
               <h2 className="display-title text-4xl sm:text-5xl">
-                Una home mas viva, mas compacta y mas cercana a una marca moderna.
+                Todo pensado para ayudarte a comprar con mas confianza.
               </h2>
               <p className="text-base leading-8 text-eb-700">
-                La referencia que nos compartiste funciona porque mezcla tipografia fuerte,
-                continuidad entre secciones y pequeños cambios de ritmo. Trajimos esa logica a
-                ElectriBol con capas, profundidad, reveals y una narrativa mas comercial.
+                En ElectriBol te acompanamos desde la busqueda de la referencia hasta la atencion
+                por WhatsApp para que tu compra sea mas rapida y segura.
               </p>
             </div>
 
@@ -176,7 +175,7 @@ export default async function HomePage() {
             <div className="max-w-3xl space-y-4">
               <p className="eyebrow">Destacados</p>
               <h2 className="display-title text-4xl sm:text-5xl">
-                Productos presentados con mas aire visual, pero menos vacio innecesario.
+                Algunas referencias que mas nos piden nuestros clientes.
               </h2>
             </div>
             <Link
@@ -200,29 +199,29 @@ export default async function HomePage() {
         <div className="shell">
           <div className="story-slab">
             <div className="space-y-5">
-              <p className="eyebrow">Experiencia comercial</p>
+              <p className="eyebrow">Compra con respaldo</p>
               <h2 className="display-title text-4xl sm:text-5xl">
-                Diseno que vende mejor porque muestra mejor.
+                Te orientamos para que elijas mejor desde el primer mensaje.
               </h2>
               <p className="text-base leading-8 text-eb-700">
-                No buscamos copiar una tienda de suplementos; tomamos su lenguaje de claridad,
-                fluidez y capas visuales para traducirlo al contexto electrico de ElectriBol. El
-                resultado apunta a una vitrina mas confiable, mas dinamica y mas facil de recorrer.
+                Si ya sabes que referencia necesitas, te ayudamos a confirmar disponibilidad. Si
+                aun estas comparando opciones, tambien te orientamos para que compres con mas
+                seguridad.
               </p>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="glass-slab p-5">
                 <p className="font-heading text-[11px] uppercase tracking-[0.2em] text-eb-700">
-                  UI
+                  Atencion
                 </p>
                 <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
-                  Editorial
+                  Cercana
                 </p>
               </div>
               <div className="glass-slab p-5">
                 <p className="font-heading text-[11px] uppercase tracking-[0.2em] text-eb-700">
-                  UX
+                  Respuesta
                 </p>
                 <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
                   Rapida
@@ -230,18 +229,17 @@ export default async function HomePage() {
               </div>
               <div className="glass-slab p-5">
                 <p className="font-heading text-[11px] uppercase tracking-[0.2em] text-eb-700">
-                  Contacto
+                  Compra
                 </p>
                 <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
-                  Directo
+                  Segura
                 </p>
               </div>
             </div>
 
             <div className="inline-flex items-center gap-2 rounded-full border border-eb-500/10 bg-white/90 px-4 py-2 text-sm text-eb-800">
               <CheckCircle2 className="h-4 w-4 text-eb-accent" />
-              Inspirado por la continuidad visual de Hunter & Gather y el enfoque de motion del
-              repo Spylt con GSAP.
+              Escribenos por WhatsApp y recibe ayuda para encontrar la referencia indicada.
             </div>
           </div>
         </div>

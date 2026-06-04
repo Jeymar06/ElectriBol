@@ -132,11 +132,11 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
               </div>
               <div className="glass-slab p-5">
                 <p className="font-heading text-[11px] uppercase tracking-[0.18em] text-eb-700">
-                  Contacto rapido
+                  Atencion directa
                 </p>
                 <p className="mt-4 text-sm leading-7 text-eb-700">
-                  Si quieres confirmar disponibilidad, compatibilidad o precio final, te respondemos
-                  por WhatsApp desde {siteConfig.city}.
+                  Si quieres confirmar disponibilidad, compatibilidad o precio final, escribenos
+                  por WhatsApp y te ayudamos desde {siteConfig.city}.
                 </p>
                 <div className="mt-5 inline-flex items-center gap-2 text-sm text-eb-800">
                   <CheckCircle2 className="h-4 w-4 text-eb-accent" />
@@ -168,7 +168,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
             <div>
               <p className="eyebrow">Relacionados</p>
               <h2 className="display-title mt-3 text-4xl">
-                Mas referencias de esta categoria con el mismo acabado visual.
+                Otras opciones que pueden interesarte.
               </h2>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

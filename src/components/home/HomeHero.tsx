@@ -88,7 +88,10 @@ export default function HomeHero({
       <div className="shell">
         <div className="grid items-center gap-10 lg:grid-cols-[1.02fr_0.98fr]">
           <div className="space-y-7">
-            <div data-hero-copy className="inline-flex items-center gap-2 rounded-full border border-eb-500/10 bg-white/88 px-4 py-2 backdrop-blur">
+            <div
+              data-hero-copy
+              className="inline-flex items-center gap-2 rounded-full border border-eb-500/10 bg-white/88 px-4 py-2 backdrop-blur"
+            >
               <Sparkles className="h-4 w-4 text-eb-accent" />
               <span className="font-heading text-[11px] uppercase tracking-[0.22em] text-eb-800">
                 Electricos, LED y soluciones para obra
@@ -98,12 +101,11 @@ export default function HomeHero({
             <div data-hero-copy className="space-y-5">
               <p className="eyebrow">Cantagallo, Bolivar</p>
               <h1 className="display-title max-w-5xl text-6xl leading-[0.88] sm:text-7xl lg:text-[6.5rem]">
-                Catalogo vivo, <span className="text-eb-500">ritmo visual</span> y cotizacion directa.
+                Todo para tu instalacion electrica, en un solo lugar.
               </h1>
               <p className="max-w-2xl text-base leading-8 text-eb-700 sm:text-lg">
-                Diseñamos ElectriBol para que se sienta mas premium, mas rapido y mas claro:
-                referencias visibles, categorias fluidas, movimiento suave y contacto inmediato por
-                WhatsApp.
+                Revisa referencias, compara opciones y escribenos por WhatsApp para confirmar
+                disponibilidad, precios y asesoria para tu compra.
               </p>
             </div>
 
@@ -153,7 +155,7 @@ export default function HomeHero({
             <div data-hero-copy className="flex flex-wrap gap-5 text-sm text-eb-800">
               <span className="inline-flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-eb-accent" />
-                Catalogo sin friccion
+                Atencion rapida
               </span>
               <span className="inline-flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-eb-accent" />
@@ -181,7 +183,7 @@ export default function HomeHero({
                   </div>
                   <div className="space-y-2 p-5">
                     <p className="font-heading text-[11px] uppercase tracking-[0.22em] text-eb-700">
-                      Destacado principal
+                      Recomendado
                     </p>
                     <h2 className="font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
                       {lead.name}
@@ -212,7 +214,7 @@ export default function HomeHero({
               <div className="scene-utility" data-scene-card data-float-card="3">
                 <div className="hero-panel min-h-[190px] p-6">
                   <p className="font-heading text-xs uppercase tracking-[0.26em] text-white/65">
-                    Horario y cobertura
+                    Visitanos o escribenos
                   </p>
                   <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-white">
                     {siteConfig.city}
