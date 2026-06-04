@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 import { redirect } from 'next/navigation';
-import { Boxes, ImageOff, Layers3, MessageCircle, SearchX, Star } from 'lucide-react';
+import { Boxes, Eye, ImageOff, Layers3, MessageCircle, SearchX, Star } from 'lucide-react';
 import AdminNav from '@/components/AdminNav';
 import { getAnalyticsSummary } from '@/lib/analytics';
 import { isAdminAuthenticated } from '@/lib/auth';
@@ -31,6 +31,7 @@ export default async function AdminDashboardPage() {
     { label: 'Destacados', value: products.filter((product) => product.featured).length, icon: Star },
     { label: 'Clics WhatsApp', value: analytics.whatsappClicks, icon: MessageCircle },
     { label: 'Busquedas vacias', value: analytics.emptySearches, icon: SearchX },
+    { label: 'Vistas de producto', value: analytics.productViews, icon: Eye },
   ];
 
   return (
@@ -108,6 +109,12 @@ export default async function AdminDashboardPage() {
                 {analytics.mapInteractions}
               </span>
             </div>
+            <div className="flex items-center justify-between border-b border-eb-300/10 pb-4">
+              <span className="text-sm text-eb-700">WhatsApp ultimos 7 dias</span>
+              <span className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
+                {analytics.recentWhatsappClicks}
+              </span>
+            </div>
             <p className="text-sm leading-6 text-eb-700">
               Estas metricas te ayudan a ver si los clientes estan preguntando, buscando sin exito
               o intentando llegar al local.
@@ -133,6 +140,76 @@ export default async function AdminDashboardPage() {
             ) : (
               <p className="text-sm leading-6 text-eb-700">
                 Aun no hay suficientes interacciones registradas para mostrar tendencias.
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+        <div className="surface p-5">
+          <p className="eyebrow">Categorias con mas interes</p>
+          <div className="mt-6 space-y-4">
+            {analytics.topCategories.length > 0 ? (
+              analytics.topCategories.map((category) => (
+                <div
+                  key={category.name}
+                  className="flex items-center justify-between border-b border-eb-300/10 pb-4 last:border-b-0 last:pb-0"
+                >
+                  <span className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
+                    {category.name}
+                  </span>
+                  <span className="text-sm text-eb-700">{category.count} interacciones</span>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm leading-6 text-eb-700">
+                Todavia no hay suficientes señales para detectar categorias lideres.
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="surface p-5">
+          <p className="eyebrow">Productos por completar</p>
+          <div className="mt-6 space-y-4">
+            {products.filter(
+              (product) =>
+                product.images.length === 0 ||
+                !product.shortDescription.trim() ||
+                !product.description.trim() ||
+                !product.reference.trim()
+            ).length > 0 ? (
+              products
+                .filter(
+                  (product) =>
+                    product.images.length === 0 ||
+                    !product.shortDescription.trim() ||
+                    !product.description.trim() ||
+                    !product.reference.trim()
+                )
+                .slice(0, 5)
+                .map((product) => (
+                <div
+                  key={product.id}
+                  className="flex items-center justify-between border-b border-eb-300/10 pb-4 last:border-b-0 last:pb-0"
+                >
+                  <div>
+                    <span className="font-heading text-lg uppercase tracking-[-0.03em] text-eb-900">
+                      {product.name}
+                    </span>
+                    <p className="text-xs uppercase tracking-[0.16em] text-eb-700">
+                      {product.category?.name || 'Sin categoria'}
+                    </p>
+                  </div>
+                  <span className="text-sm text-eb-700">
+                    {product.images.length === 0 ? 'Falta imagen' : 'Falta contenido'}
+                  </span>
+                </div>
+                ))
+            ) : (
+              <p className="text-sm leading-6 text-eb-700">
+                Muy bien: no hay referencias urgentes por completar en este momento.
               </p>
             )}
           </div>

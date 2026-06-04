@@ -1,8 +1,8 @@
 'use client';
 
-import { Pencil, Plus, Save, Trash2, X } from 'lucide-react';
-import { useState } from 'react';
-import type { Category } from '@/types';
+import { Pencil, Plus, Save, Search, Trash2, X } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import type { Category, ProductWithCategory } from '@/types';
 
 type CategoryFormState = {
   id?: string;
@@ -21,10 +21,31 @@ function createEmptyCategory(): CategoryFormState {
   };
 }
 
-export default function AdminCategoriesManager({ initialCategories }: { initialCategories: Category[] }) {
+export default function AdminCategoriesManager({
+  initialCategories,
+  products,
+}: {
+  initialCategories: Category[];
+  products: ProductWithCategory[];
+}) {
   const [categories, setCategories] = useState(initialCategories);
   const [editing, setEditing] = useState<CategoryFormState | null>(null);
   const [toast, setToast] = useState('');
+  const [query, setQuery] = useState('');
+  const filteredCategories = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    return categories.filter((category) => {
+      if (normalizedQuery.length === 0) {
+        return true;
+      }
+
+      return (
+        category.name.toLowerCase().includes(normalizedQuery) ||
+        category.description.toLowerCase().includes(normalizedQuery) ||
+        category.icon.toLowerCase().includes(normalizedQuery)
+      );
+    });
+  }, [categories, query]);
 
   const showToast = (message: string) => {
     setToast(message);
@@ -111,18 +132,50 @@ export default function AdminCategoriesManager({ initialCategories }: { initialC
         </button>
       </div>
 
+      <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
+        <label className="surface flex items-center gap-3 px-4 py-3">
+          <Search className="h-4 w-4 text-eb-700" />
+          <input
+            type="search"
+            className="w-full bg-transparent text-sm text-eb-900 outline-none placeholder:text-eb-700"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Buscar por nombre, icono o descripcion"
+          />
+        </label>
+        <div className="stat-card">
+          <p className="font-heading text-xs uppercase tracking-[0.14em] text-eb-700">Activas</p>
+          <p className="mt-4 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+            {categories.filter((category) => category.active).length}
+          </p>
+        </div>
+        <div className="stat-card">
+          <p className="font-heading text-xs uppercase tracking-[0.14em] text-eb-700">Con productos</p>
+          <p className="mt-4 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+            {categories.filter((category) => products.some((product) => product.categoryId === category.id)).length}
+          </p>
+        </div>
+        <div className="stat-card">
+          <p className="font-heading text-xs uppercase tracking-[0.14em] text-eb-700">Sin uso</p>
+          <p className="mt-4 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+            {categories.filter((category) => !products.some((product) => product.categoryId === category.id)).length}
+          </p>
+        </div>
+      </div>
+
       <div className="surface overflow-x-auto">
         <table className="min-w-full text-sm text-eb-800">
           <thead className="border-b border-eb-300/10 text-left font-heading text-xs uppercase tracking-[0.14em] text-eb-700">
             <tr>
               <th className="px-4 py-4">Nombre</th>
               <th className="px-4 py-4">Descripcion</th>
+              <th className="px-4 py-4">Productos</th>
               <th className="px-4 py-4">Activa</th>
               <th className="px-4 py-4 text-right">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {categories.map((category) => (
+            {filteredCategories.map((category) => (
               <tr key={category.id} className="border-b border-eb-300/10 last:border-b-0">
                 <td className="px-4 py-4">
                   <div>
@@ -133,6 +186,9 @@ export default function AdminCategoriesManager({ initialCategories }: { initialC
                   </div>
                 </td>
                 <td className="px-4 py-4 text-eb-700">{category.description}</td>
+                <td className="px-4 py-4 text-eb-700">
+                  {products.filter((product) => product.categoryId === category.id).length}
+                </td>
                 <td className="px-4 py-4">
                   <input
                     type="checkbox"
@@ -152,6 +208,13 @@ export default function AdminCategoriesManager({ initialCategories }: { initialC
                 </td>
               </tr>
             ))}
+            {filteredCategories.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-4 py-10 text-center text-sm text-eb-700">
+                  No hay categorias que coincidan con la busqueda.
+                </td>
+              </tr>
+            ) : null}
           </tbody>
         </table>
       </div>

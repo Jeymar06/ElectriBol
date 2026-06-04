@@ -10,6 +10,9 @@ type AnalyticsSummary = {
   mapInteractions: number;
   emptySearches: number;
   topProducts: Array<{ name: string; count: number }>;
+  topCategories: Array<{ name: string; count: number }>;
+  productViews: number;
+  recentWhatsappClicks: number;
   recentEvents: AnalyticsEventRecord[];
 };
 
@@ -30,6 +33,9 @@ function emptySummary(): AnalyticsSummary {
     mapInteractions: 0,
     emptySearches: 0,
     topProducts: [],
+    topCategories: [],
+    productViews: 0,
+    recentWhatsappClicks: 0,
     recentEvents: [],
   };
 }
@@ -91,11 +97,17 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
   }>;
 
   const productCounter = new Map<string, number>();
+  const categoryCounter = new Map<string, number>();
   let whatsappClicks = 0;
   let mapInteractions = 0;
   let emptySearches = 0;
+  let productViews = 0;
+  let recentWhatsappClicks = 0;
+  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
   for (const row of rows) {
+    const eventTime = new Date(row.created_at).getTime();
+
     if (
       row.entity_id === 'whatsapp_click' ||
       row.entity_id === 'product_whatsapp_click' ||
@@ -103,6 +115,9 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
       row.entity_id === 'contact_whatsapp_click'
     ) {
       whatsappClicks += 1;
+      if (eventTime >= sevenDaysAgo) {
+        recentWhatsappClicks += 1;
+      }
     }
 
     if (row.entity_id === 'map_open' || row.entity_id === 'directions_click') {
@@ -113,15 +128,28 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
       emptySearches += 1;
     }
 
+    if (row.entity_id === 'product_view') {
+      productViews += 1;
+    }
+
     if (row.payload?.productName) {
       productCounter.set(
         row.payload.productName,
         (productCounter.get(row.payload.productName) || 0) + 1
       );
     }
+
+    if (row.payload?.category) {
+      categoryCounter.set(row.payload.category, (categoryCounter.get(row.payload.category) || 0) + 1);
+    }
   }
 
   const topProducts = Array.from(productCounter.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([name, count]) => ({ name, count }));
+
+  const topCategories = Array.from(categoryCounter.entries())
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
     .map(([name, count]) => ({ name, count }));
@@ -142,6 +170,9 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     mapInteractions,
     emptySearches,
     topProducts,
+    topCategories,
+    productViews,
+    recentWhatsappClicks,
     recentEvents,
   };
 }

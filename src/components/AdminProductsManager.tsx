@@ -67,6 +67,32 @@ function mapProductToForm(product: ProductWithCategory): ProductFormState {
   };
 }
 
+function getProductIssues(product: ProductWithCategory) {
+  const issues: string[] = [];
+
+  if (product.images.length === 0) {
+    issues.push('Sin imagen');
+  }
+
+  if (!product.shortDescription.trim()) {
+    issues.push('Sin resumen');
+  }
+
+  if (!product.description.trim()) {
+    issues.push('Sin descripcion');
+  }
+
+  if (!product.reference.trim()) {
+    issues.push('Sin referencia');
+  }
+
+  if (!product.priceOnRequest && product.price == null) {
+    issues.push('Sin precio');
+  }
+
+  return issues;
+}
+
 export default function AdminProductsManager({
   initialProducts,
   categories,
@@ -82,7 +108,7 @@ export default function AdminProductsManager({
   const [toast, setToast] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'available' | 'featured' | 'hidden'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'available' | 'featured' | 'hidden' | 'incomplete'>('all');
 
   const activeCategories = useMemo(() => categories.filter((category) => category.active), [categories]);
   const filteredProducts = useMemo(() => {
@@ -99,7 +125,8 @@ export default function AdminProductsManager({
         statusFilter === 'all' ||
         (statusFilter === 'available' && product.available) ||
         (statusFilter === 'featured' && product.featured) ||
-        (statusFilter === 'hidden' && !product.available);
+        (statusFilter === 'hidden' && !product.available) ||
+        (statusFilter === 'incomplete' && getProductIssues(product).length > 0);
 
       return matchesQuery && matchesCategory && matchesStatus;
     });
@@ -307,12 +334,15 @@ export default function AdminProductsManager({
         <select
           className="field"
           value={statusFilter}
-          onChange={(event) => setStatusFilter(event.target.value as 'all' | 'available' | 'featured' | 'hidden')}
+          onChange={(event) =>
+            setStatusFilter(event.target.value as 'all' | 'available' | 'featured' | 'hidden' | 'incomplete')
+          }
         >
           <option value="all">Todos los estados</option>
           <option value="available">Solo disponibles</option>
           <option value="featured">Solo destacados</option>
           <option value="hidden">No disponibles</option>
+          <option value="incomplete">Por completar</option>
         </select>
       </div>
 
@@ -341,6 +371,12 @@ export default function AdminProductsManager({
             {filteredProducts.length}
           </p>
         </div>
+        <div className="stat-card">
+          <p className="font-heading text-xs uppercase tracking-[0.14em] text-eb-700">Por completar</p>
+          <p className="mt-4 font-heading text-4xl uppercase tracking-[-0.05em] text-eb-900">
+            {products.filter((product) => getProductIssues(product).length > 0).length}
+          </p>
+        </div>
       </div>
 
       <div className="surface overflow-x-auto">
@@ -359,6 +395,10 @@ export default function AdminProductsManager({
             {filteredProducts.map((product) => (
               <tr key={product.id} className="border-b border-eb-300/10 last:border-b-0">
                 <td className="px-4 py-4">
+                  {(() => {
+                    const issues = getProductIssues(product);
+
+                    return (
                   <div className="flex items-center gap-3">
                     <div className="relative h-16 w-20 overflow-hidden rounded-lg border border-eb-300/10 bg-eb-100">
                       <Image
@@ -377,8 +417,22 @@ export default function AdminProductsManager({
                       <p className="text-xs uppercase tracking-[0.16em] text-eb-700">
                         Ref. {product.reference}
                       </p>
+                      {issues.length > 0 ? (
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {issues.slice(0, 2).map((issue) => (
+                            <span
+                              key={issue}
+                              className="rounded-full border border-amber-300/40 bg-amber-50 px-2 py-1 text-[10px] font-medium uppercase tracking-[0.14em] text-amber-700"
+                            >
+                              {issue}
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
                     </div>
                   </div>
+                    );
+                  })()}
                 </td>
                 <td className="px-4 py-4">{product.category?.name || '-'}</td>
                 <td className="px-4 py-4">

@@ -10,7 +10,7 @@ import { redirect } from 'next/navigation';
 import AdminCategoriesManager from '@/components/AdminCategoriesManager';
 import AdminNav from '@/components/AdminNav';
 import { isAdminAuthenticated } from '@/lib/auth';
-import { getCategories } from '@/lib/catalog';
+import { getCategories, getProductsWithCategories } from '@/lib/catalog';
 
 export default async function AdminCategoriesPage() {
   const authenticated = await isAdminAuthenticated();
@@ -18,12 +18,12 @@ export default async function AdminCategoriesPage() {
     redirect('/admin/login');
   }
 
-  const categories = await getCategories(false);
+  const [categories, products] = await Promise.all([getCategories(false), getProductsWithCategories()]);
 
   return (
     <div className="admin-shell">
       <AdminNav />
-      <AdminCategoriesManager initialCategories={categories} />
+      <AdminCategoriesManager initialCategories={categories} products={products} />
     </div>
   );
 }
