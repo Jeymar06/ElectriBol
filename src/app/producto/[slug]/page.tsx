@@ -2,12 +2,22 @@ export const dynamic = 'force-dynamic';
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, CheckCircle2, ChevronRight, MessageCircle, Sparkles } from 'lucide-react';
+import {
+  ArrowRight,
+  CheckCircle2,
+  ChevronRight,
+  Clock3,
+  MapPin,
+  MessageCircle,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 import { notFound } from 'next/navigation';
 import MotionSection from '@/components/home/MotionSection';
 import ProductCard from '@/components/ProductCard';
 import ProductImage, { buildPlaceholder } from '@/components/ProductImage';
 import ProductViewTracker from '@/components/ProductViewTracker';
+import TrackableExternalLink from '@/components/TrackableExternalLink';
 import { getProductBySlug, getRelatedProducts } from '@/lib/catalog';
 import { buildProductWhatsAppUrl, siteConfig } from '@/lib/site';
 import { formatCurrency } from '@/utils/format';
@@ -41,9 +51,13 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
   const related = await getRelatedProducts(product, 4);
   const gallery = product.images.length > 0 ? product.images : [product.images[0]].filter(Boolean);
   const imageList = gallery.length > 0 ? gallery : [null];
+  const productWhatsAppUrl = buildProductWhatsAppUrl(product.name, product.reference, {
+    category: product.category?.name,
+    available: product.available,
+  });
 
   return (
-    <div className="section-space pt-8">
+    <div className="section-space pb-28 pt-8 md:pb-20">
       <ProductViewTracker
         productId={product.id}
         productName={product.name}
@@ -109,13 +123,13 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
 
               <div>
                 <h1 className="display-title text-5xl sm:text-6xl">{product.name}</h1>
-                <p className="mt-3 text-sm uppercase tracking-[0.18em] text-eb-700">
+                <p className="mt-3 text-sm uppercase tracking-[0.08em] text-eb-700">
                   Ref. {product.reference}
                 </p>
               </div>
 
               <div className="space-y-3">
-                <p className="font-heading text-4xl uppercase tracking-[-0.05em] text-eb-500">
+                <p className="font-heading text-4xl uppercase text-eb-500">
                   {formatCurrency(product.priceOnRequest ? null : product.price)}
                 </p>
                 {product.compareAtPrice ? (
@@ -123,9 +137,24 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
                     {formatCurrency(product.compareAtPrice)}
                   </p>
                 ) : null}
-                <p className="text-sm uppercase tracking-[0.18em] text-eb-800">
+                <p className="text-sm uppercase tracking-[0.08em] text-eb-800">
                   {product.available ? 'Disponible' : 'Disponibilidad por confirmar'} | Por {product.unit}
                 </p>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="customer-proof-pill">
+                  <CheckCircle2 className="h-4 w-4 text-eb-accent" />
+                  Consulta rapida
+                </div>
+                <div className="customer-proof-pill">
+                  <MapPin className="h-4 w-4 text-eb-accent" />
+                  {siteConfig.city}
+                </div>
+                <div className="customer-proof-pill">
+                  <Clock3 className="h-4 w-4 text-eb-accent" />
+                  Atencion local
+                </div>
               </div>
             </div>
 
@@ -141,26 +170,33 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
                   Atencion directa
                 </p>
                 <p className="mt-4 text-sm leading-7 text-eb-700">
-                  Si quieres confirmar disponibilidad, compatibilidad o precio final, escribenos
-                  por WhatsApp y te ayudamos desde {siteConfig.city}.
+                  Si tienes dudas sobre medida, compatibilidad o cantidad, escribenos por
+                  WhatsApp y revisamos contigo la mejor opcion disponible.
                 </p>
                 <div className="mt-5 inline-flex items-center gap-2 text-sm text-eb-800">
-                  <CheckCircle2 className="h-4 w-4 text-eb-accent" />
-                  Respuesta directa del local
+                  <ShieldCheck className="h-4 w-4 text-eb-accent" />
+                  Asesoria antes de comprar
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row">
-              <a
-                href={buildProductWhatsAppUrl(product.name, product.reference)}
+              <TrackableExternalLink
+                href={productWhatsAppUrl}
                 target="_blank"
                 rel="noreferrer"
+                tracking={{
+                  event: 'product_whatsapp_click',
+                  productId: product.id,
+                  productName: product.name,
+                  category: product.category?.name,
+                  label: 'product_detail_main',
+                }}
                 className="btn-primary flex-1"
               >
                 <MessageCircle className="mr-2 h-5 w-5" />
                 Consultar por WhatsApp
-              </a>
+              </TrackableExternalLink>
               <Link href="/catalogo" className="btn-secondary flex-1">
                 Volver al catalogo
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -168,6 +204,30 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
             </div>
           </MotionSection>
         </div>
+
+        <MotionSection className="product-confidence-band">
+          <div>
+            <p className="font-heading text-xl uppercase text-eb-900">Compra con ayuda directa</p>
+            <p className="mt-2 text-sm leading-7 text-eb-700">
+              Te atendemos desde {siteConfig.city}, confirmamos disponibilidad y te guiamos si
+              necesitas una alternativa compatible.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <span className="customer-proof-pill">
+              <MessageCircle className="h-4 w-4 text-eb-accent" />
+              WhatsApp directo
+            </span>
+            <span className="customer-proof-pill">
+              <Clock3 className="h-4 w-4 text-eb-accent" />
+              {siteConfig.hours.split('|')[0]}
+            </span>
+            <span className="customer-proof-pill">
+              <MapPin className="h-4 w-4 text-eb-accent" />
+              Como llegar
+            </span>
+          </div>
+        </MotionSection>
 
         {related.length > 0 ? (
           <MotionSection className="space-y-6">
@@ -184,6 +244,25 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
             </div>
           </MotionSection>
         ) : null}
+      </div>
+
+      <div className="mobile-product-cta md:hidden">
+        <TrackableExternalLink
+          href={productWhatsAppUrl}
+          target="_blank"
+          rel="noreferrer"
+          tracking={{
+            event: 'product_whatsapp_click',
+            productId: product.id,
+            productName: product.name,
+            category: product.category?.name,
+            label: 'product_mobile_sticky',
+          }}
+          className="btn-primary w-full"
+        >
+          <MessageCircle className="mr-2 h-5 w-5" />
+          Consultar este producto
+        </TrackableExternalLink>
       </div>
     </div>
   );

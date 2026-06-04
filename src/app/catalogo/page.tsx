@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, Search, SlidersHorizontal } from 'lucide-react';
 import CatalogClient from '@/components/CatalogClient';
+import CustomerTrustBand from '@/components/CustomerTrustBand';
 import MotionSection from '@/components/home/MotionSection';
 import { getCategories, getProductsWithCategories } from '@/lib/catalog';
 import { buildMetadata } from '@/utils/seo';
@@ -73,6 +74,10 @@ export default async function CatalogPage() {
               </span>
             ))}
           </div>
+        </MotionSection>
+
+        <MotionSection>
+          <CustomerTrustBand />
         </MotionSection>
 
         <MotionSection>

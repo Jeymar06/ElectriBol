@@ -1,12 +1,12 @@
 'use client';
 
-import { Search } from 'lucide-react';
+import { MessageCircle, Search, SlidersHorizontal, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Category, ProductWithCategory } from '@/types';
 import ProductCard from '@/components/ProductCard';
+import { customerQuickSearches, matchesCustomerSearch } from '@/lib/customer-search';
 import { buildCatalogWhatsAppUrl } from '@/lib/site';
 import { sendTrackingEvent } from '@/lib/tracking';
-import { normalizeText } from '@/utils/format';
 
 interface CatalogClientProps {
   products: ProductWithCategory[];
@@ -25,15 +25,11 @@ export default function CatalogClient({
   const lastEmptySearchKey = useRef('');
 
   const filtered = useMemo(() => {
-    const normalizedQuery = normalizeText(query);
-
     return products.filter((product) => {
       const matchesCategory = category === 'todos' || product.category?.slug === category;
       const matchesAvailability = !availableOnly || product.available;
-      const haystack = normalizeText(
-        `${product.name} ${product.reference} ${product.shortDescription} ${product.category?.name || ''}`
-      );
-      const matchesQuery = !normalizedQuery || haystack.includes(normalizedQuery);
+      const haystack = `${product.name} ${product.reference} ${product.shortDescription} ${product.description} ${product.category?.name || ''}`;
+      const matchesQuery = matchesCustomerSearch(haystack, query);
 
       return matchesCategory && matchesAvailability && matchesQuery;
     });
@@ -61,27 +57,46 @@ export default function CatalogClient({
 
   return (
     <div className="space-y-8">
-      <div className="glass-slab p-5 md:p-6">
+      <div className="customer-filter-panel">
         <div className="flex flex-col gap-5">
           <div className="relative">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-eb-200" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Buscar por nombre, referencia o categoria"
-              className="field pl-12"
+              placeholder="Busca bombillos, cables, reflectores..."
+              className="field min-h-[52px] pl-12 pr-12 text-base"
             />
+            {query ? (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                className="absolute right-3 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg border border-eb-500/10 bg-white text-eb-700"
+                aria-label="Limpiar busqueda"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            ) : null}
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-2 overflow-x-auto pb-1 md:flex-wrap md:overflow-visible">
+            {customerQuickSearches.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setQuery(item)}
+                className={`customer-chip shrink-0 ${query === item ? 'customer-chip-active' : ''}`}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto pb-1 md:flex-wrap md:overflow-visible">
             <button
               type="button"
               onClick={() => setCategory('todos')}
-              className={`rounded-full px-4 py-2 font-heading text-xs uppercase tracking-[0.14em] transition ${
-                category === 'todos'
-                  ? 'bg-eb-500 text-white'
-                  : 'border border-eb-500/10 bg-white/90 text-eb-700 hover:text-eb-900'
-              }`}
+              className={`customer-chip shrink-0 ${category === 'todos' ? 'customer-chip-active' : ''}`}
             >
               Todos
             </button>
@@ -90,18 +105,18 @@ export default function CatalogClient({
                 key={item.id}
                 type="button"
                 onClick={() => setCategory(item.slug)}
-                className={`rounded-full px-4 py-2 font-heading text-xs uppercase tracking-[0.14em] transition ${
-                  category === item.slug
-                    ? 'bg-eb-500 text-white'
-                    : 'border border-eb-500/10 bg-white/90 text-eb-700 hover:text-eb-900'
-                }`}
+                className={`customer-chip shrink-0 ${category === item.slug ? 'customer-chip-active' : ''}`}
               >
                 {item.name}
               </button>
             ))}
           </div>
 
-          <label className="inline-flex items-center gap-3 text-sm text-eb-900">
+          <label className="inline-flex min-h-[48px] items-center justify-between gap-3 rounded-xl border border-eb-500/10 bg-white px-4 py-3 text-sm text-eb-900 md:justify-start">
+            <span className="inline-flex items-center gap-2">
+              <SlidersHorizontal className="h-4 w-4 text-eb-600" />
+              Mostrar solo referencias disponibles
+            </span>
             <input
               type="checkbox"
               checked={availableOnly}
@@ -129,7 +144,7 @@ export default function CatalogClient({
               label: 'catalog_toolbar',
             })
           }
-          className="hidden rounded-full border border-eb-500/10 bg-white/90 px-4 py-2 font-heading text-[11px] uppercase tracking-[0.16em] text-eb-800 md:inline-flex"
+          className="hidden rounded-lg border border-eb-500/10 bg-white/90 px-4 py-2 font-heading text-[11px] uppercase tracking-[0.12em] text-eb-800 md:inline-flex"
         >
           No encuentras lo que buscas?
         </a>
@@ -142,12 +157,13 @@ export default function CatalogClient({
           ))}
         </div>
       ) : (
-        <div className="glass-slab p-10 text-center">
-          <p className="font-heading text-2xl uppercase tracking-[-0.04em] text-eb-900">
-            No encontramos productos con esos filtros
+        <div className="customer-empty-state text-center">
+          <p className="font-heading text-3xl uppercase text-eb-900">
+            Te ayudamos a encontrarlo
           </p>
-          <p className="mt-3 text-sm text-eb-700">
-            Prueba con otra categoria, desactiva el filtro de disponibilidad o cambia la busqueda.
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-eb-700">
+            Si no aparece en el catalogo, escribenos con lo que buscas. Podemos confirmar
+            disponibilidad, sugerir una alternativa o revisar una referencia parecida.
           </p>
           <a
             href={buildCatalogWhatsAppUrl(activeCategoryName, query || undefined)}
@@ -163,7 +179,8 @@ export default function CatalogClient({
             }
             className="btn-primary mt-6"
           >
-            Consultar por WhatsApp
+            <MessageCircle className="mr-2 h-4 w-4" />
+            Preguntar por esta busqueda
           </a>
         </div>
       )}

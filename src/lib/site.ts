@@ -29,33 +29,43 @@ export function createWhatsAppUrl(message: string): string {
   return `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
-export function buildProductWhatsAppUrl(name: string, reference: string): string {
+export function buildProductWhatsAppUrl(
+  name: string,
+  reference: string,
+  options?: { category?: string; available?: boolean }
+): string {
+  const availabilityText =
+    options?.available === false
+      ? 'Quiero confirmar disponibilidad y alternativas.'
+      : 'Quiero confirmar disponibilidad y precio final.';
+  const categoryText = options?.category ? ` Categoria: ${options.category}.` : '';
+
   return createWhatsAppUrl(
-    `Hola, me interesa *${name}* (Ref: ${reference}). Me pueden dar mas informacion?`
+    `Hola, vi en la pagina el producto *${name}* (Ref: ${reference}).${categoryText} ${availabilityText}`
   );
 }
 
 export function buildCatalogWhatsAppUrl(category?: string, query?: string): string {
   if (query) {
     return createWhatsAppUrl(
-      `Hola, estoy buscando ${query} y quiero saber si lo tienen disponible.`
+      `Hola, estoy buscando "${query}". Me pueden decir que opciones tienen disponibles y cual recomiendan?`
     );
   }
 
   if (category) {
     return createWhatsAppUrl(
-      `Hola, quiero informacion sobre productos de la categoria ${category}.`
+      `Hola, estoy revisando productos de ${category}. Me pueden ayudar a escoger una opcion disponible?`
     );
   }
 
   return createWhatsAppUrl(
-    'Hola, quiero informacion sobre productos electricos disponibles en ElectriBol.'
+    'Hola, estoy revisando el catalogo de ElectriBol. Me pueden ayudar con disponibilidad y precios?'
   );
 }
 
 export function buildGeneralWhatsAppUrl(): string {
   return createWhatsAppUrl(
-    'Hola, quiero informacion sobre productos, precios y disponibilidad.'
+    'Hola, quiero consultar productos electricos disponibles en ElectriBol.'
   );
 }
 

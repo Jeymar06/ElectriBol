@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowRight, Layers3 } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import CatalogClient from '@/components/CatalogClient';
+import CustomerTrustBand from '@/components/CustomerTrustBand';
 import MotionSection from '@/components/home/MotionSection';
 import { getCategories, getCategoryBySlug, getProductsByCategory, getProductsWithCategories } from '@/lib/catalog';
 import { buildMetadata } from '@/utils/seo';
@@ -70,6 +71,10 @@ export default async function CatalogCategoryPage({ params }: { params: { slug: 
               </p>
             </div>
           </div>
+        </MotionSection>
+
+        <MotionSection>
+          <CustomerTrustBand />
         </MotionSection>
 
         <MotionSection>

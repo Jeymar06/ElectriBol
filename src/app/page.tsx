@@ -6,6 +6,7 @@ import HomeHero from '@/components/home/HomeHero';
 import LocationExperience from '@/components/home/LocationExperience';
 import MotionSection from '@/components/home/MotionSection';
 import CategoryIcon from '@/components/CategoryIcon';
+import CustomerTrustBand from '@/components/CustomerTrustBand';
 import ProductCard from '@/components/ProductCard';
 import {
   getCategories,
@@ -89,6 +90,12 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <MotionSection>
+        <div className="shell">
+          <CustomerTrustBand />
+        </div>
+      </MotionSection>
 
       <MotionSection className="section-space pt-8">
         <div className="shell">

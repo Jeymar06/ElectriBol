@@ -8,7 +8,7 @@ import { formatCurrency } from '@/utils/format';
 
 export default function ProductCard({ product }: { product: ProductWithCategory }) {
   return (
-    <article className="surface group overflow-hidden rounded-[30px] border-white/70 bg-[rgba(255,255,255,0.86)] shadow-[0_24px_80px_rgba(17,53,99,0.09)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_90px_rgba(17,53,99,0.14)]">
+    <article className="surface group overflow-hidden rounded-2xl border-white/70 bg-[rgba(255,255,255,0.88)] shadow-[0_18px_58px_rgba(17,53,99,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_26px_76px_rgba(17,53,99,0.13)]">
       <Link href={`/producto/${product.slug}`} className="block">
         <div className="relative aspect-[4/3] overflow-hidden border-b border-[rgba(144,202,249,0.12)]">
           <ProductImage
@@ -23,7 +23,7 @@ export default function ProductCard({ product }: { product: ProductWithCategory 
 
       <div className="space-y-4 p-5">
         <div className="flex items-center justify-between gap-3">
-          <span className="rounded-full border border-eb-500/10 bg-eb-100/90 px-3 py-1 font-heading text-[11px] uppercase tracking-[0.16em] text-eb-800">
+          <span className="rounded-lg border border-eb-500/10 bg-eb-100/90 px-3 py-1 font-heading text-[11px] uppercase tracking-[0.08em] text-eb-800">
             {product.category?.name || 'Catalogo'}
           </span>
           {product.available ? (
@@ -37,10 +37,10 @@ export default function ProductCard({ product }: { product: ProductWithCategory 
         </div>
 
         <div>
-          <h3 className="font-heading text-2xl uppercase tracking-[-0.04em] text-eb-900">
+          <h3 className="font-heading text-2xl uppercase text-eb-900">
             {product.name}
           </h3>
-          <p className="mt-1 text-xs uppercase tracking-[0.18em] text-eb-700">
+          <p className="mt-1 text-xs uppercase tracking-[0.08em] text-eb-700">
             Ref. {product.reference}
           </p>
         </div>
@@ -49,25 +49,28 @@ export default function ProductCard({ product }: { product: ProductWithCategory 
 
         <div className="flex items-end justify-between gap-3">
           <div>
-            <p className="font-heading text-2xl uppercase tracking-[-0.04em] text-eb-500">
+            <p className="font-heading text-2xl uppercase text-eb-500">
               {formatCurrency(product.priceOnRequest ? null : product.price)}
             </p>
             {product.compareAtPrice ? (
               <p className="text-sm text-eb-error line-through">{formatCurrency(product.compareAtPrice)}</p>
             ) : (
-              <p className="text-xs uppercase tracking-[0.16em] text-eb-700">Por {product.unit}</p>
+              <p className="text-xs uppercase tracking-[0.08em] text-eb-700">Por {product.unit}</p>
             )}
           </div>
           <Link
             href={`/producto/${product.slug}`}
-            className="inline-flex items-center gap-2 font-heading text-sm uppercase tracking-[0.14em] text-eb-800 transition hover:text-eb-500"
+            className="inline-flex items-center gap-2 font-heading text-sm uppercase tracking-[0.08em] text-eb-800 transition hover:text-eb-500"
           >
             Ver mas <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
         <TrackableExternalLink
-          href={buildProductWhatsAppUrl(product.name, product.reference)}
+          href={buildProductWhatsAppUrl(product.name, product.reference, {
+            category: product.category?.name,
+            available: product.available,
+          })}
           target="_blank"
           rel="noreferrer"
           tracking={{
@@ -80,7 +83,7 @@ export default function ProductCard({ product }: { product: ProductWithCategory 
           className="btn-primary w-full"
         >
           <MessageCircle className="mr-2 h-4 w-4" />
-          Pedir informacion
+          {product.priceOnRequest ? 'Consultar precio' : 'Consultar disponibilidad'}
         </TrackableExternalLink>
       </div>
     </article>

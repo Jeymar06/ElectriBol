@@ -354,6 +354,96 @@
       radial-gradient(circle at top right, rgba(41, 182, 246, 0.12), transparent 28%);
     box-shadow: 0 24px 80px rgba(17, 53, 99, 0.07);
   }
+
+  .customer-filter-panel {
+    border-radius: 18px;
+    border: 1px solid rgba(21, 101, 192, 0.12);
+    background: rgba(255, 255, 255, 0.92);
+    padding: 1rem;
+    box-shadow: 0 18px 58px rgba(17, 53, 99, 0.08);
+    backdrop-filter: blur(14px);
+  }
+
+  .customer-chip {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid rgba(21, 101, 192, 0.12);
+    background: rgba(255, 255, 255, 0.94);
+    padding: 0.65rem 0.9rem;
+    font-family: var(--font-heading), sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--eb-800);
+    transition:
+      background 180ms ease,
+      border-color 180ms ease,
+      color 180ms ease;
+  }
+
+  .customer-chip-active {
+    border-color: var(--eb-500);
+    background: var(--eb-500);
+    color: white;
+  }
+
+  .customer-empty-state {
+    border-radius: 18px;
+    border: 1px dashed rgba(21, 101, 192, 0.22);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 249, 255, 0.96)),
+      radial-gradient(circle at top right, rgba(41, 182, 246, 0.12), transparent 32%);
+    padding: 2rem 1rem;
+    box-shadow: 0 18px 58px rgba(17, 53, 99, 0.06);
+  }
+
+  .customer-trust-band {
+    display: grid;
+    gap: 0.75rem;
+    border-radius: 18px;
+    border: 1px solid rgba(21, 101, 192, 0.1);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    box-shadow: 0 18px 58px rgba(17, 53, 99, 0.07);
+  }
+
+  .customer-trust-item,
+  .customer-proof-pill {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    gap: 0.75rem;
+    border-radius: 12px;
+    border: 1px solid rgba(21, 101, 192, 0.08);
+    background: rgba(255, 255, 255, 0.82);
+    padding: 0.8rem 0.9rem;
+  }
+
+  .product-confidence-band {
+    display: grid;
+    gap: 1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(21, 101, 192, 0.1);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 249, 255, 0.94)),
+      radial-gradient(circle at top right, rgba(41, 182, 246, 0.12), transparent 30%);
+    padding: 1rem;
+    box-shadow: 0 18px 58px rgba(17, 53, 99, 0.07);
+  }
+
+  .mobile-product-cta {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 60;
+    border-top: 1px solid rgba(21, 101, 192, 0.12);
+    background: rgba(255, 255, 255, 0.96);
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+    box-shadow: 0 -14px 36px rgba(17, 53, 99, 0.12);
+    backdrop-filter: blur(16px);
+  }
 }
 
 @keyframes marquee {
@@ -387,6 +477,23 @@
 
   .product-detail-shell {
     padding: 2rem;
+  }
+
+  .customer-filter-panel,
+  .customer-empty-state,
+  .customer-trust-band,
+  .product-confidence-band {
+    border-radius: 22px;
+    padding: 1.5rem;
+  }
+
+  .customer-trust-band {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .product-confidence-band {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
   }
 }
 

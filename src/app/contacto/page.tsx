@@ -1,7 +1,7 @@
 import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import TrackableExternalLink from '@/components/TrackableExternalLink';
 import { buildMetadata } from '@/utils/seo';
-import { siteConfig } from '@/lib/site';
+import { buildGeneralWhatsAppUrl, siteConfig } from '@/lib/site';
 
 export const metadata = buildMetadata({
   title: 'Contacto',
@@ -69,7 +69,7 @@ export default function ContactPage() {
             descripcion y te ayudamos a encontrar la mejor opcion.
           </p>
           <TrackableExternalLink
-            href={`https://wa.me/${siteConfig.whatsappNumber}`}
+            href={buildGeneralWhatsAppUrl()}
             target="_blank"
             rel="noreferrer"
             tracking={{ event: 'contact_whatsapp_click', label: 'contact_page' }}
