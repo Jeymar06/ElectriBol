@@ -4,6 +4,7 @@ const contentSecurityPolicy = [
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",
+  "frame-src 'self' https://www.google.com https://maps.google.com",
   "img-src 'self' data: blob: https://dldbbhblwdiejzisxlby.supabase.co",
   "font-src 'self' https://fonts.gstatic.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",

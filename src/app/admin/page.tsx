@@ -19,11 +19,27 @@ export default async function AdminDashboardPage() {
     redirect('/admin/login');
   }
 
-  const [products, categories, analytics] = await Promise.all([
+  const [productsResult, categoriesResult, analyticsResult] = await Promise.allSettled([
     getProductsWithCategories(),
     getCategories(false),
     getAnalyticsSummary(),
   ]);
+  const products = productsResult.status === 'fulfilled' ? productsResult.value : [];
+  const categories = categoriesResult.status === 'fulfilled' ? categoriesResult.value : [];
+  const analytics =
+    analyticsResult.status === 'fulfilled'
+      ? analyticsResult.value
+      : {
+          totalEvents: 0,
+          whatsappClicks: 0,
+          mapInteractions: 0,
+          emptySearches: 0,
+          topProducts: [],
+          topCategories: [],
+          productViews: 0,
+          recentWhatsappClicks: 0,
+          recentEvents: [],
+        };
   const stats = [
     { label: 'Total productos', value: products.length, icon: Boxes },
     { label: 'Categorias', value: categories.length, icon: Layers3 },
