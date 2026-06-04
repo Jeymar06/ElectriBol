@@ -102,36 +102,44 @@ export async function destroyAdminSession(): Promise<void> {
 }
 
 export async function getAdminProfile(): Promise<Profile | null> {
-  if (isSupabaseEnabled()) {
-    const supabase = createSupabaseServerClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  try {
+    if (isSupabaseEnabled()) {
+      const supabase = createSupabaseServerClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    if (!user) {
+      if (!user) {
+        return null;
+      }
+
+      const profile = await getSupabaseProfile(user.id);
+      if (!profile || profile.role !== 'admin') {
+        return null;
+      }
+
+      return profile;
+    }
+
+    const token = cookies().get(SESSION_COOKIE)?.value;
+    if (!isLocalAuthAllowed() || !adminEmail || token !== buildSessionToken(adminEmail)) {
       return null;
     }
 
-    const profile = await getSupabaseProfile(user.id);
-    if (!profile || profile.role !== 'admin') {
-      return null;
-    }
-
-    return profile;
-  }
-
-  const token = cookies().get(SESSION_COOKIE)?.value;
-  if (!isLocalAuthAllowed() || !adminEmail || token !== buildSessionToken(adminEmail)) {
+    return {
+      id: 'local-admin',
+      email: adminEmail,
+      role: 'admin',
+    };
+  } catch {
     return null;
   }
-
-  return {
-    id: 'local-admin',
-    email: adminEmail,
-    role: 'admin',
-  };
 }
 
 export async function isAdminAuthenticated(): Promise<boolean> {
-  return Boolean(await getAdminProfile());
+  try {
+    return Boolean(await getAdminProfile());
+  } catch {
+    return false;
+  }
 }

@@ -19,10 +19,18 @@ export function createSupabaseServerClient() {
         return cookieStore.get(name)?.value;
       },
       set(name: string, value: string, options) {
-        cookieStore.set({ name, value, ...options });
+        try {
+          cookieStore.set({ name, value, ...options });
+        } catch {
+          // Server Components cannot always write refreshed auth cookies.
+        }
       },
       remove(name: string, options) {
-        cookieStore.set({ name, value: '', ...options, maxAge: 0 });
+        try {
+          cookieStore.set({ name, value: '', ...options, maxAge: 0 });
+        } catch {
+          // Server Components cannot always clear auth cookies during render.
+        }
       },
     },
   });
