@@ -6,7 +6,13 @@ import { buildProductWhatsAppUrl } from '@/lib/site';
 import TrackableExternalLink from '@/components/TrackableExternalLink';
 import { formatCurrency } from '@/utils/format';
 
-export default function ProductCard({ product }: { product: ProductWithCategory }) {
+export default function ProductCard({
+  product,
+  whatsappNumber,
+}: {
+  product: ProductWithCategory;
+  whatsappNumber?: string;
+}) {
   return (
     <article className="surface group overflow-hidden rounded-2xl border-white/70 bg-[rgba(255,255,255,0.88)] shadow-[0_18px_58px_rgba(17,53,99,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_26px_76px_rgba(17,53,99,0.13)]">
       <Link href={`/producto/${product.slug}`} className="block">
@@ -76,6 +82,7 @@ export default function ProductCard({ product }: { product: ProductWithCategory 
             available: product.available,
             slug: product.slug,
             imageUrl: product.images[0],
+            whatsappNumber,
           })}
           target="_blank"
           rel="noreferrer"

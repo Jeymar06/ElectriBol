@@ -14,6 +14,7 @@ import {
   getProductsByCategory,
   getProductsWithCategories,
 } from '@/lib/catalog';
+import { getSiteContent } from '@/lib/site-content';
 import { buildMetadata } from '@/utils/seo';
 
 export const metadata = buildMetadata({
@@ -52,6 +53,7 @@ export default async function HomePage() {
     getFeaturedProducts(6),
     getProductsWithCategories(),
   ]);
+  const content = await getSiteContent();
 
   const categoryCards = await Promise.all(
     categories.map(async (category) => ({
@@ -61,15 +63,7 @@ export default async function HomePage() {
   );
 
   const heroProducts = featuredProducts.length > 0 ? featuredProducts : allProducts.slice(0, 3);
-  const marqueeItems = [
-    'Iluminacion LED',
-    'Reflectores',
-    'Cables',
-    'Accesorios',
-    'Cotizacion rapida',
-    'Atencion local',
-    'Stock visible',
-  ];
+  const marqueeItems = content.salesPhrases;
 
   return (
     <div className="overflow-hidden">
@@ -77,6 +71,7 @@ export default async function HomePage() {
         products={heroProducts}
         totalProducts={allProducts.length}
         totalCategories={categories.length}
+        content={content}
       />
 
       <section className="pb-8">
@@ -93,7 +88,7 @@ export default async function HomePage() {
 
       <MotionSection>
         <div className="shell">
-          <CustomerTrustBand />
+          <CustomerTrustBand content={content} />
         </div>
       </MotionSection>
 
@@ -103,7 +98,7 @@ export default async function HomePage() {
             <div className="max-w-3xl space-y-4">
               <p className="eyebrow">Categorias</p>
               <h2 className="display-title text-4xl sm:text-5xl">
-                Encuentra lo que buscas por tipo de producto.
+                {content.home.categoriesTitle}
               </h2>
             </div>
             <Link
@@ -150,11 +145,10 @@ export default async function HomePage() {
             <div className="max-w-2xl space-y-4">
               <p className="eyebrow">Por que elegirnos</p>
               <h2 className="display-title text-4xl sm:text-5xl">
-                Todo pensado para ayudarte a comprar con mas confianza.
+                {content.home.trustTitle}
               </h2>
               <p className="text-base leading-8 text-eb-700">
-                En ElectriBol te acompanamos desde la busqueda de la referencia hasta la atencion
-                por WhatsApp para que tu compra sea mas rapida y segura.
+                {content.home.trustText}
               </p>
             </div>
 
@@ -183,11 +177,10 @@ export default async function HomePage() {
               <div className="max-w-3xl space-y-4">
                 <p className="eyebrow">Destacados</p>
                 <h2 className="display-title text-4xl sm:text-5xl">
-                  Algunas referencias que mas nos piden nuestros clientes.
+                  {content.home.featuredTitle}
                 </h2>
                 <p className="max-w-2xl text-sm leading-7 text-eb-700">
-                  Una vitrina corta para empezar rapido: revisa, abre la ficha o consulta por
-                  WhatsApp con la referencia lista.
+                  {content.home.featuredSubtitle}
                 </p>
               </div>
               <Link
@@ -202,7 +195,7 @@ export default async function HomePage() {
             <div className="product-shelf">
               {featuredProducts.map((product) => (
                 <div key={product.id} className="product-shelf-item">
-                  <ProductCard product={product} />
+                  <ProductCard product={product} whatsappNumber={content.contact.whatsappNumber} />
                 </div>
               ))}
             </div>
@@ -216,12 +209,10 @@ export default async function HomePage() {
             <div className="space-y-5">
               <p className="eyebrow">Compra con respaldo</p>
               <h2 className="display-title text-4xl sm:text-5xl">
-                Te orientamos para que elijas mejor desde el primer mensaje.
+                {content.home.storyTitle}
               </h2>
               <p className="text-base leading-8 text-eb-700">
-                Si ya sabes que referencia necesitas, te ayudamos a confirmar disponibilidad. Si
-                aun estas comparando opciones, tambien te orientamos para que compres con mas
-                seguridad.
+                {content.home.storyText}
               </p>
             </div>
 
@@ -261,7 +252,7 @@ export default async function HomePage() {
       </MotionSection>
 
       <MotionSection>
-        <LocationExperience />
+        <LocationExperience content={content} />
       </MotionSection>
     </div>
   );

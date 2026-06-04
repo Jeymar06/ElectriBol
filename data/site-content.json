@@ -1,0 +1,62 @@
+{
+  "brand": {
+    "name": "ElectriBol",
+    "logoUrl": "",
+    "tagline": "Iluminacion, cables y accesorios electricos en Cantagallo, Bolivar",
+    "description": "Encuentra lamparas LED, cables electricos, reflectores y accesorios para tu hogar, negocio o proyecto.",
+    "announcement": "Atendemos en Cantagallo, Bolivar. Lunes a viernes de 8AM a 6PM y sabados hasta las 2PM."
+  },
+  "contact": {
+    "city": "Cantagallo, Bolivar",
+    "address": "Carrera 3 #11-30, Barrio 23 de enero, Cantagallo, Bolivar",
+    "whatsappNumber": "573015956954",
+    "whatsappDisplay": "+57 301 595 6954",
+    "email": "info@electribol.com",
+    "hours": "Lunes-Viernes 8AM-6PM | Sabados 8AM-2PM | Domingos: Cerrado",
+    "serviceArea": "Cantagallo, Bolivar y alrededores",
+    "googleMapsQuery": "Carrera 3 #11-30, Barrio 23 de enero, Cantagallo, Bolivar, Colombia",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Carrera%203%20%2311-30%2C%20Barrio%2023%20de%20enero%2C%20Cantagallo%2C%20Bolivar%2C%20Colombia",
+    "googleMapsEmbedUrl": "https://www.google.com/maps?q=Carrera%203%20%2311-30%2C%20Barrio%2023%20de%20enero%2C%20Cantagallo%2C%20Bolivar%2C%20Colombia&z=16&output=embed"
+  },
+  "home": {
+    "eyebrow": "Cantagallo, Bolivar",
+    "headline": "Todo para tu instalacion electrica, en un solo lugar.",
+    "subheadline": "Revisa referencias, compara opciones y escribenos por WhatsApp para confirmar disponibilidad, precios y asesoria para tu compra.",
+    "primaryCta": "Explorar catalogo",
+    "secondaryCta": "Abrir WhatsApp",
+    "categoriesTitle": "Encuentra lo que buscas por tipo de producto.",
+    "featuredTitle": "Algunas referencias que mas nos piden nuestros clientes.",
+    "featuredSubtitle": "Una vitrina corta para empezar rapido: revisa, abre la ficha o consulta por WhatsApp con la referencia lista.",
+    "trustTitle": "Todo pensado para ayudarte a comprar con mas confianza.",
+    "trustText": "En ElectriBol te acompanamos desde la busqueda de la referencia hasta la atencion por WhatsApp para que tu compra sea mas rapida y segura.",
+    "storyTitle": "Te orientamos para que elijas mejor desde el primer mensaje.",
+    "storyText": "Si ya sabes que referencia necesitas, te ayudamos a confirmar disponibilidad. Si aun estas comparando opciones, tambien te orientamos para que compres con mas seguridad."
+  },
+  "catalog": {
+    "eyebrow": "Catalogo completo",
+    "title": "Encuentra mas rapido la referencia que estas buscando.",
+    "description": "Revisa por categoria, busca por nombre o referencia y filtra por disponibilidad para encontrar justo lo que necesitas.",
+    "primaryCta": "Hablar con el local",
+    "searchPlaceholder": "Busca bombillos, cables, reflectores...",
+    "emptyTitle": "Te ayudamos a encontrarlo",
+    "emptyText": "Si no aparece en el catalogo, escribenos con lo que buscas. Podemos confirmar disponibilidad, sugerir una alternativa o revisar una referencia parecida."
+  },
+  "contactPage": {
+    "eyebrow": "Contacto",
+    "title": "Habla con nosotros y encuentra lo que necesitas.",
+    "description": "Si ya viste una referencia en el catalogo, escribenos por WhatsApp. Si todavia estas comparando opciones, tambien te ayudamos a elegir.",
+    "panelEyebrow": "Atencion inmediata",
+    "panelTitle": "WhatsApp directo para consultas y pedidos.",
+    "panelText": "Envianos la referencia, una foto o una breve descripcion y te ayudamos a encontrar la mejor opcion.",
+    "whatsappCta": "Abrir WhatsApp"
+  },
+  "salesPhrases": [
+    "Iluminacion LED",
+    "Reflectores",
+    "Cables",
+    "Accesorios",
+    "Cotizacion rapida",
+    "Atencion local",
+    "Stock visible"
+  ]
+}

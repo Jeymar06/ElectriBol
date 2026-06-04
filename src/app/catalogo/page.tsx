@@ -6,6 +6,7 @@ import CatalogClient from '@/components/CatalogClient';
 import CustomerTrustBand from '@/components/CustomerTrustBand';
 import MotionSection from '@/components/home/MotionSection';
 import { getCategories, getProductsWithCategories } from '@/lib/catalog';
+import { getSiteContent } from '@/lib/site-content';
 import { buildMetadata } from '@/utils/seo';
 
 export const metadata = buildMetadata({
@@ -15,7 +16,11 @@ export const metadata = buildMetadata({
 });
 
 export default async function CatalogPage() {
-  const [products, categories] = await Promise.all([getProductsWithCategories(), getCategories(true)]);
+  const [products, categories, content] = await Promise.all([
+    getProductsWithCategories(),
+    getCategories(true),
+    getSiteContent(),
+  ]);
 
   return (
     <div className="section-space pt-8">
@@ -23,17 +28,16 @@ export default async function CatalogPage() {
         <MotionSection className="catalog-hero">
           <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
             <div className="space-y-5">
-              <p className="eyebrow">Catalogo completo</p>
+              <p className="eyebrow">{content.catalog.eyebrow}</p>
               <h1 className="display-title text-5xl sm:text-6xl">
-                Encuentra mas rapido la referencia que estas buscando.
+                {content.catalog.title}
               </h1>
               <p className="max-w-2xl text-base leading-8 text-eb-700">
-                Revisa por categoria, busca por nombre o referencia y filtra por disponibilidad
-                para encontrar justo lo que necesitas.
+                {content.catalog.description}
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link href="/contacto" className="btn-primary">
-                  Hablar con el local
+                  {content.catalog.primaryCta}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
                 <span className="inline-flex items-center gap-2 rounded-full border border-eb-500/10 bg-white/85 px-4 py-2 text-sm text-eb-800">
@@ -77,11 +81,11 @@ export default async function CatalogPage() {
         </MotionSection>
 
         <MotionSection>
-          <CustomerTrustBand />
+          <CustomerTrustBand content={content} />
         </MotionSection>
 
         <MotionSection>
-          <CatalogClient products={products} categories={categories} />
+          <CatalogClient products={products} categories={categories} content={content} />
         </MotionSection>
       </div>
     </div>

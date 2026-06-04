@@ -25,8 +25,8 @@ export const siteConfig = {
   priceRange: '$$',
 };
 
-export function createWhatsAppUrl(message: string): string {
-  return `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(message)}`;
+export function createWhatsAppUrl(message: string, whatsappNumber = siteConfig.whatsappNumber): string {
+  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
 export function getPublicBaseUrl(): string {
@@ -63,6 +63,7 @@ export function buildProductWhatsAppUrl(
     available?: boolean;
     slug?: string;
     imageUrl?: string | null;
+    whatsappNumber?: string;
   }
 ): string {
   const availabilityText =
@@ -79,50 +80,57 @@ export function buildProductWhatsAppUrl(
     availabilityText,
   ].filter(Boolean);
 
-  return createWhatsAppUrl(contextLines.join('\n'));
+  return createWhatsAppUrl(contextLines.join('\n'), options?.whatsappNumber);
 }
 
-export function buildCatalogWhatsAppUrl(category?: string, query?: string): string {
+export function buildCatalogWhatsAppUrl(category?: string, query?: string, whatsappNumber?: string): string {
   if (query) {
     return createWhatsAppUrl(
-      `Hola, estoy buscando "${query}". Me pueden decir que opciones tienen disponibles y cual recomiendan?`
+      `Hola, estoy buscando "${query}". Me pueden decir que opciones tienen disponibles y cual recomiendan?`,
+      whatsappNumber
     );
   }
 
   if (category) {
     return createWhatsAppUrl(
-      `Hola, estoy revisando productos de ${category}. Me pueden ayudar a escoger una opcion disponible?`
+      `Hola, estoy revisando productos de ${category}. Me pueden ayudar a escoger una opcion disponible?`,
+      whatsappNumber
     );
   }
 
   return createWhatsAppUrl(
-    'Hola, estoy revisando el catalogo de ElectriBol. Me pueden ayudar con disponibilidad y precios?'
+    'Hola, estoy revisando el catalogo de ElectriBol. Me pueden ayudar con disponibilidad y precios?',
+    whatsappNumber
   );
 }
 
-export function buildGeneralWhatsAppUrl(): string {
+export function buildGeneralWhatsAppUrl(whatsappNumber?: string): string {
   return createWhatsAppUrl(
-    'Hola, quiero consultar productos electricos disponibles en ElectriBol.'
+    'Hola, quiero consultar productos electricos disponibles en ElectriBol.',
+    whatsappNumber
   );
 }
 
-export function buildLocalBusinessSchema() {
+export function buildLocalBusinessSchema(content?: import('@/types').SiteContent) {
+  const brand = content?.brand || siteConfig;
+  const contact = content?.contact || siteConfig;
+
   return {
     '@context': 'https://schema.org',
     '@type': 'HardwareStore',
-    name: siteConfig.name,
-    description: siteConfig.description,
-    image: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/og-electribol.svg`,
-    telephone: siteConfig.whatsappDisplay,
-    email: siteConfig.email,
+    name: brand.name,
+    description: brand.description,
+    image: content?.brand.logoUrl || `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/og-electribol.svg`,
+    telephone: contact.whatsappDisplay,
+    email: contact.email,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: siteConfig.address,
+      streetAddress: contact.address,
       addressLocality: 'Cantagallo',
       addressRegion: 'Bolivar',
       addressCountry: 'CO',
     },
-    areaServed: siteConfig.serviceArea,
+    areaServed: contact.serviceArea,
     priceRange: siteConfig.priceRange,
     url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
     sameAs: [],

@@ -2,7 +2,7 @@
 
 import { MessageCircle, Search, SlidersHorizontal, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { Category, ProductWithCategory } from '@/types';
+import type { Category, ProductWithCategory, SiteContent } from '@/types';
 import ProductCard from '@/components/ProductCard';
 import { customerQuickSearches, matchesCustomerSearch } from '@/lib/customer-search';
 import { buildCatalogWhatsAppUrl } from '@/lib/site';
@@ -11,12 +11,14 @@ import { sendTrackingEvent } from '@/lib/tracking';
 interface CatalogClientProps {
   products: ProductWithCategory[];
   categories: Category[];
+  content: SiteContent;
   initialCategory?: string;
 }
 
 export default function CatalogClient({
   products,
   categories,
+  content,
   initialCategory = 'todos',
 }: CatalogClientProps) {
   const [query, setQuery] = useState('');
@@ -64,7 +66,7 @@ export default function CatalogClient({
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Busca bombillos, cables, reflectores..."
+              placeholder={content.catalog.searchPlaceholder}
               className="field min-h-[52px] pl-12 pr-12 text-base"
             />
             {query ? (
@@ -123,7 +125,6 @@ export default function CatalogClient({
               onChange={(event) => setAvailableOnly(event.target.checked)}
               className="h-4 w-4 rounded border-eb-300/30 bg-eb-900 text-eb-400"
             />
-            Solo disponibles
           </label>
         </div>
       </div>
@@ -133,7 +134,7 @@ export default function CatalogClient({
           {filtered.length} productos encontrados
         </p>
         <a
-          href={buildCatalogWhatsAppUrl(activeCategoryName, query || undefined)}
+          href={buildCatalogWhatsAppUrl(activeCategoryName, query || undefined, content.contact.whatsappNumber)}
           target="_blank"
           rel="noreferrer"
           onClick={() =>
@@ -153,20 +154,23 @@ export default function CatalogClient({
       {filtered.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              whatsappNumber={content.contact.whatsappNumber}
+            />
           ))}
         </div>
       ) : (
         <div className="customer-empty-state text-center">
           <p className="font-heading text-3xl uppercase text-eb-900">
-            Te ayudamos a encontrarlo
+            {content.catalog.emptyTitle}
           </p>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-eb-700">
-            Si no aparece en el catalogo, escribenos con lo que buscas. Podemos confirmar
-            disponibilidad, sugerir una alternativa o revisar una referencia parecida.
+            {content.catalog.emptyText}
           </p>
           <a
-            href={buildCatalogWhatsAppUrl(activeCategoryName, query || undefined)}
+            href={buildCatalogWhatsAppUrl(activeCategoryName, query || undefined, content.contact.whatsappNumber)}
             target="_blank"
             rel="noreferrer"
             onClick={() =>

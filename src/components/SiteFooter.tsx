@@ -1,17 +1,17 @@
 import Link from 'next/link';
 import { Mail, MapPin, Phone } from 'lucide-react';
-import { siteConfig } from '@/lib/site';
+import type { SiteContent } from '@/types';
 
-export default function SiteFooter() {
+export default function SiteFooter({ content }: { content: SiteContent }) {
   return (
     <footer className="border-t border-eb-500/10 bg-white/90">
       <div className="shell grid gap-10 py-12 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
         <div className="space-y-4">
-          <p className="eyebrow">ElectriBol</p>
+          <p className="eyebrow">{content.brand.name}</p>
           <h2 className="font-heading text-3xl uppercase tracking-[-0.04em] text-eb-900">
-            Iluminacion, cables y soluciones electricas para tu proyecto.
+            {content.brand.tagline}
           </h2>
-          <p className="max-w-xl text-sm text-eb-700">{siteConfig.description}</p>
+          <p className="max-w-xl text-sm text-eb-700">{content.brand.description}</p>
           <div className="h-px w-24 bg-eb-500/20" />
         </div>
 
@@ -34,15 +34,15 @@ export default function SiteFooter() {
           <p className="font-heading text-sm uppercase tracking-[0.14em] text-eb-900">Contacto</p>
           <div className="flex items-start gap-3">
             <MapPin className="mt-0.5 h-4 w-4 text-eb-accent" />
-            <span>{siteConfig.address}</span>
+            <span>{content.contact.address}</span>
           </div>
           <div className="flex items-center gap-3">
             <Phone className="h-4 w-4 text-eb-accent" />
-            <a href={`tel:${siteConfig.whatsappNumber}`}>{siteConfig.whatsappDisplay}</a>
+            <a href={`tel:${content.contact.whatsappNumber}`}>{content.contact.whatsappDisplay}</a>
           </div>
           <div className="flex items-center gap-3">
             <Mail className="h-4 w-4 text-eb-accent" />
-            <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+            <a href={`mailto:${content.contact.email}`}>{content.contact.email}</a>
           </div>
         </div>
       </div>

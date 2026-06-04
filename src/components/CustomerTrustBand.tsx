@@ -1,30 +1,31 @@
 import { Clock3, MapPin, MessageCircle, ShieldCheck } from 'lucide-react';
 import { siteConfig } from '@/lib/site';
+import type { SiteContent } from '@/types';
 
-const items = [
-  {
-    label: 'WhatsApp directo',
-    detail: 'Consulta disponibilidad y precios',
-    icon: MessageCircle,
-  },
-  {
-    label: siteConfig.city,
-    detail: 'Atencion local y ruta al negocio',
-    icon: MapPin,
-  },
-  {
-    label: 'Asesoria antes de comprar',
-    detail: 'Te ayudamos a elegir la referencia',
-    icon: ShieldCheck,
-  },
-  {
-    label: 'Horario visible',
-    detail: siteConfig.hours.split('|')[0],
-    icon: Clock3,
-  },
-];
+export default function CustomerTrustBand({ content }: { content?: SiteContent }) {
+  const items = [
+    {
+      label: 'WhatsApp directo',
+      detail: 'Consulta disponibilidad y precios',
+      icon: MessageCircle,
+    },
+    {
+      label: content?.contact.city || siteConfig.city,
+      detail: 'Atencion local y ruta al negocio',
+      icon: MapPin,
+    },
+    {
+      label: 'Asesoria antes de comprar',
+      detail: 'Te ayudamos a elegir la referencia',
+      icon: ShieldCheck,
+    },
+    {
+      label: 'Horario visible',
+      detail: (content?.contact.hours || siteConfig.hours).split('|')[0],
+      icon: Clock3,
+    },
+  ];
 
-export default function CustomerTrustBand() {
   return (
     <div className="customer-trust-band">
       {items.map((item) => {

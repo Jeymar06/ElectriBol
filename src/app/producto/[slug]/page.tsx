@@ -19,7 +19,8 @@ import ProductImage, { buildPlaceholder } from '@/components/ProductImage';
 import ProductViewTracker from '@/components/ProductViewTracker';
 import TrackableExternalLink from '@/components/TrackableExternalLink';
 import { getProductBySlug, getRelatedProducts } from '@/lib/catalog';
-import { buildProductWhatsAppUrl, siteConfig } from '@/lib/site';
+import { buildProductWhatsAppUrl } from '@/lib/site';
+import { getSiteContent } from '@/lib/site-content';
 import { formatCurrency } from '@/utils/format';
 import { buildMetadata } from '@/utils/seo';
 
@@ -48,7 +49,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
     notFound();
   }
 
-  const related = await getRelatedProducts(product, 4);
+  const [related, content] = await Promise.all([getRelatedProducts(product, 4), getSiteContent()]);
   const gallery = product.images.length > 0 ? product.images : [product.images[0]].filter(Boolean);
   const imageList = gallery.length > 0 ? gallery : [null];
   const productWhatsAppUrl = buildProductWhatsAppUrl(product.name, product.reference, {
@@ -56,6 +57,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
     available: product.available,
     slug: product.slug,
     imageUrl: product.images[0],
+    whatsappNumber: content.contact.whatsappNumber,
   });
 
   return (
@@ -151,7 +153,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
                 </div>
                 <div className="customer-proof-pill">
                   <MapPin className="h-4 w-4 text-eb-accent" />
-                  {siteConfig.city}
+                  {content.contact.city}
                 </div>
                 <div className="customer-proof-pill">
                   <Clock3 className="h-4 w-4 text-eb-accent" />
@@ -211,7 +213,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
           <div>
             <p className="font-heading text-xl uppercase text-eb-900">Compra con ayuda directa</p>
             <p className="mt-2 text-sm leading-7 text-eb-700">
-              Te atendemos desde {siteConfig.city}, confirmamos disponibilidad y te guiamos si
+              Te atendemos desde {content.contact.city}, confirmamos disponibilidad y te guiamos si
               necesitas una alternativa compatible.
             </p>
           </div>
@@ -222,7 +224,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
             </span>
             <span className="customer-proof-pill">
               <Clock3 className="h-4 w-4 text-eb-accent" />
-              {siteConfig.hours.split('|')[0]}
+              {content.contact.hours.split('|')[0]}
             </span>
             <span className="customer-proof-pill">
               <MapPin className="h-4 w-4 text-eb-accent" />
@@ -241,7 +243,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {related.map((item) => (
-                <ProductCard key={item.id} product={item} />
+                <ProductCard key={item.id} product={item} whatsappNumber={content.contact.whatsappNumber} />
               ))}
             </div>
           </MotionSection>

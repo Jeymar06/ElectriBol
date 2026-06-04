@@ -1,12 +1,12 @@
 import { Clock3, MapPin, MessageCircle, ShieldCheck } from 'lucide-react';
-import { siteConfig } from '@/lib/site';
+import type { SiteContent } from '@/types';
 
-export default function AnnouncementBar() {
+export default function AnnouncementBar({ content }: { content: SiteContent }) {
   const items = [
-    { label: siteConfig.city, icon: MapPin },
+    { label: content.contact.city, icon: MapPin },
     { label: 'WhatsApp directo', icon: MessageCircle },
-    { label: siteConfig.hours.split('|')[0], icon: Clock3 },
-    { label: 'Asesoria antes de comprar', icon: ShieldCheck },
+    { label: content.contact.hours.split('|')[0], icon: Clock3 },
+    { label: content.brand.announcement || 'Asesoria antes de comprar', icon: ShieldCheck },
   ];
 
   return (

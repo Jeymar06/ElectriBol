@@ -4,14 +4,16 @@ import { useState } from 'react';
 import { MapPinned, Navigation, Phone, Route } from 'lucide-react';
 import { siteConfig } from '@/lib/site';
 import { sendTrackingEvent } from '@/lib/tracking';
+import type { SiteContent } from '@/types';
 
-export default function LocationExperience() {
+export default function LocationExperience({ content }: { content?: SiteContent }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const contact = content?.contact || siteConfig;
 
   const handleDirections = () => {
     if (!navigator.geolocation) {
-      window.open(siteConfig.googleMapsUrl, '_blank', 'noopener,noreferrer');
+      window.open(contact.googleMapsUrl, '_blank', 'noopener,noreferrer');
       return;
     }
 
@@ -22,14 +24,14 @@ export default function LocationExperience() {
       (position) => {
         sendTrackingEvent({ event: 'directions_click', label: 'location_section' });
         const origin = `${position.coords.latitude},${position.coords.longitude}`;
-        const destination = encodeURIComponent(siteConfig.googleMapsQuery);
+        const destination = encodeURIComponent(contact.googleMapsQuery);
         const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
         window.open(url, '_blank', 'noopener,noreferrer');
         setLoading(false);
       },
       () => {
         setError('No pudimos tomar tu ubicacion. Abrimos el mapa general del local.');
-        window.open(siteConfig.googleMapsUrl, '_blank', 'noopener,noreferrer');
+        window.open(contact.googleMapsUrl, '_blank', 'noopener,noreferrer');
         setLoading(false);
       },
       { enableHighAccuracy: true, timeout: 10000 }
@@ -56,20 +58,20 @@ export default function LocationExperience() {
                 <p className="mt-4 font-heading text-xl uppercase tracking-[-0.04em] text-eb-900">
                   Direccion
                 </p>
-                <p className="mt-3 text-sm leading-7 text-eb-700">{siteConfig.address}</p>
+                <p className="mt-3 text-sm leading-7 text-eb-700">{contact.address}</p>
               </div>
               <div className="glass-slab p-5">
                 <Phone className="h-6 w-6 text-eb-accent" />
                 <p className="mt-4 font-heading text-xl uppercase tracking-[-0.04em] text-eb-900">
                   Horario
                 </p>
-                <p className="mt-3 text-sm leading-7 text-eb-700">{siteConfig.hours}</p>
+                <p className="mt-3 text-sm leading-7 text-eb-700">{contact.hours}</p>
               </div>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <a
-                href={siteConfig.googleMapsUrl}
+                href={contact.googleMapsUrl}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => sendTrackingEvent({ event: 'map_open', label: 'location_section' })}
@@ -90,7 +92,7 @@ export default function LocationExperience() {
           <div className="map-frame">
             <iframe
               title="Mapa del local ElectriBol"
-              src={siteConfig.googleMapsEmbedUrl}
+              src={contact.googleMapsEmbedUrl}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               className="h-full min-h-[420px] w-full border-0"

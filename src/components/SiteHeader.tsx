@@ -1,10 +1,11 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, Phone, X, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { siteConfig } from '@/lib/site';
+import type { SiteContent } from '@/types';
 
 const links = [
   { href: '/', label: 'Inicio' },
@@ -12,7 +13,7 @@ const links = [
   { href: '/contacto', label: 'Contacto' },
 ];
 
-export default function SiteHeader() {
+export default function SiteHeader({ content }: { content: SiteContent }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -34,16 +35,26 @@ export default function SiteHeader() {
     >
       <div className="shell flex h-20 items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-eb-500/10 bg-eb-100">
-            <span className="font-heading text-2xl uppercase tracking-tight text-eb-900">
-              E<Zap className="relative -left-1 inline h-4 w-4 text-eb-500" />
-            </span>
+          <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-eb-500/10 bg-eb-100">
+            {content.brand.logoUrl ? (
+              <Image
+                src={content.brand.logoUrl}
+                alt={content.brand.name}
+                fill
+                unoptimized
+                className="object-contain p-1.5"
+              />
+            ) : (
+              <span className="font-heading text-2xl uppercase tracking-tight text-eb-900">
+                {content.brand.name.slice(0, 1) || 'E'}<Zap className="relative -left-1 inline h-4 w-4 text-eb-500" />
+              </span>
+            )}
           </div>
           <div>
             <p className="font-heading text-xl uppercase tracking-[-0.04em] text-eb-900">
-              ElectriBol
+              {content.brand.name}
             </p>
-            <p className="text-xs text-eb-700">{siteConfig.city}</p>
+            <p className="text-xs text-eb-700">{content.contact.city}</p>
           </div>
         </Link>
 
@@ -62,12 +73,12 @@ export default function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <a href={`tel:${siteConfig.whatsappNumber}`} className="btn-secondary">
+          <a href={`tel:${content.contact.whatsappNumber}`} className="btn-secondary">
             <Phone className="mr-2 h-4 w-4" />
             Llamar
           </a>
           <a
-            href={`https://wa.me/${siteConfig.whatsappNumber}`}
+            href={`https://wa.me/${content.contact.whatsappNumber}`}
             target="_blank"
             rel="noreferrer"
             className="btn-primary"
@@ -86,8 +97,8 @@ export default function SiteHeader() {
         </button>
       </div>
       <div className="shell hidden items-center justify-between border-t border-eb-500/10 py-3 text-[11px] font-heading uppercase tracking-[0.18em] text-eb-700 md:flex">
-        <span>Paneles LED, cables, reflectores y accesorios</span>
-        <span>{siteConfig.hours}</span>
+        <span>{content.brand.tagline}</span>
+        <span>{content.contact.hours}</span>
       </div>
 
       {open && (
@@ -104,7 +115,7 @@ export default function SiteHeader() {
               </Link>
             ))}
             <a
-              href={`https://wa.me/${siteConfig.whatsappNumber}`}
+              href={`https://wa.me/${content.contact.whatsappNumber}`}
               target="_blank"
               rel="noreferrer"
               className="btn-primary w-full"

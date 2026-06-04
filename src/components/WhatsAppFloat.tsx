@@ -2,16 +2,20 @@
 
 import { MessageCircle } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { buildGeneralWhatsAppUrl } from '@/lib/site';
+import { createWhatsAppUrl } from '@/lib/site';
 import TrackableExternalLink from '@/components/TrackableExternalLink';
+import type { SiteContent } from '@/types';
 
-export default function WhatsAppFloat() {
+export default function WhatsAppFloat({ content }: { content: SiteContent }) {
   const pathname = usePathname();
   const hiddenOnMobileProduct = pathname.startsWith('/producto/');
 
   return (
     <TrackableExternalLink
-      href={buildGeneralWhatsAppUrl()}
+      href={createWhatsAppUrl(
+        'Hola, quiero consultar productos electricos disponibles en ElectriBol.',
+        content.contact.whatsappNumber
+      )}
       target="_blank"
       rel="noreferrer"
       tracking={{ event: 'whatsapp_click', label: 'floating_whatsapp' }}

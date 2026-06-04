@@ -75,3 +75,58 @@ export interface AdminSession {
   authenticated: boolean;
   email?: string;
 }
+
+export interface SiteContent {
+  brand: {
+    name: string;
+    logoUrl: string;
+    tagline: string;
+    description: string;
+    announcement: string;
+  };
+  contact: {
+    city: string;
+    address: string;
+    whatsappNumber: string;
+    whatsappDisplay: string;
+    email: string;
+    hours: string;
+    serviceArea: string;
+    googleMapsQuery: string;
+    googleMapsUrl: string;
+    googleMapsEmbedUrl: string;
+  };
+  home: {
+    eyebrow: string;
+    headline: string;
+    subheadline: string;
+    primaryCta: string;
+    secondaryCta: string;
+    categoriesTitle: string;
+    featuredTitle: string;
+    featuredSubtitle: string;
+    trustTitle: string;
+    trustText: string;
+    storyTitle: string;
+    storyText: string;
+  };
+  catalog: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    primaryCta: string;
+    searchPlaceholder: string;
+    emptyTitle: string;
+    emptyText: string;
+  };
+  contactPage: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    panelEyebrow: string;
+    panelTitle: string;
+    panelText: string;
+    whatsappCta: string;
+  };
+  salesPhrases: string[];
+}

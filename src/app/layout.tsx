@@ -4,6 +4,7 @@ import './globals.css';
 import AppShell from '@/components/AppShell';
 import { getBaseUrl } from '@/lib/env';
 import { buildLocalBusinessSchema, siteConfig } from '@/lib/site';
+import { getSiteContent } from '@/lib/site-content';
 
 const heading = Oswald({
   subsets: ['latin'],
@@ -41,12 +42,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const localBusinessSchema = buildLocalBusinessSchema();
+  const content = await getSiteContent();
+  const localBusinessSchema = buildLocalBusinessSchema(content);
 
   return (
     <html lang="es">
@@ -55,7 +57,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
-        <AppShell>{children}</AppShell>
+        <AppShell content={content}>{children}</AppShell>
       </body>
     </html>
   );

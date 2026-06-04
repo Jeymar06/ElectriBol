@@ -7,6 +7,7 @@ import CatalogClient from '@/components/CatalogClient';
 import CustomerTrustBand from '@/components/CustomerTrustBand';
 import MotionSection from '@/components/home/MotionSection';
 import { getCategories, getCategoryBySlug, getProductsByCategory, getProductsWithCategories } from '@/lib/catalog';
+import { getSiteContent } from '@/lib/site-content';
 import { buildMetadata } from '@/utils/seo';
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
@@ -34,7 +35,11 @@ export default async function CatalogCategoryPage({ params }: { params: { slug: 
     notFound();
   }
 
-  const [products, categories] = await Promise.all([getProductsWithCategories(), getCategories(true)]);
+  const [products, categories, content] = await Promise.all([
+    getProductsWithCategories(),
+    getCategories(true),
+    getSiteContent(),
+  ]);
   const total = (await getProductsByCategory(category.id)).length;
 
   return (
@@ -74,11 +79,16 @@ export default async function CatalogCategoryPage({ params }: { params: { slug: 
         </MotionSection>
 
         <MotionSection>
-          <CustomerTrustBand />
+          <CustomerTrustBand content={content} />
         </MotionSection>
 
         <MotionSection>
-          <CatalogClient products={products} categories={categories} initialCategory={category.slug} />
+          <CatalogClient
+            products={products}
+            categories={categories}
+            content={content}
+            initialCategory={category.slug}
+          />
         </MotionSection>
       </div>
     </div>

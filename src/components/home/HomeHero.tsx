@@ -5,19 +5,22 @@ import { useEffect, useRef } from 'react';
 import { ArrowRight, CheckCircle2, MapPin, MessageCircle, Sparkles } from 'lucide-react';
 import { gsap } from 'gsap';
 import type { ProductWithCategory } from '@/types';
+import type { SiteContent } from '@/types';
 import ProductImage from '@/components/ProductImage';
-import { siteConfig } from '@/lib/site';
+import { buildGeneralWhatsAppUrl, siteConfig } from '@/lib/site';
 
 interface HomeHeroProps {
   products: ProductWithCategory[];
   totalProducts: number;
   totalCategories: number;
+  content?: SiteContent;
 }
 
 export default function HomeHero({
   products,
   totalProducts,
   totalCategories,
+  content,
 }: HomeHeroProps) {
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -82,6 +85,8 @@ export default function HomeHero({
   }, []);
 
   const [lead, second, third] = products;
+  const home = content?.home;
+  const contact = content?.contact;
 
   return (
     <section className="hero-shell overflow-hidden pb-10 pt-6 md:pt-8" ref={ref}>
@@ -94,34 +99,34 @@ export default function HomeHero({
             >
               <Sparkles className="h-4 w-4 text-eb-accent" />
               <span className="font-heading text-[11px] uppercase tracking-[0.22em] text-eb-800">
-                Electricos, LED y soluciones para obra
+                {content?.brand.tagline || 'Electricos, LED y soluciones para obra'}
               </span>
             </div>
 
             <div data-hero-copy className="space-y-5">
-              <p className="eyebrow">Cantagallo, Bolivar</p>
+              <p className="eyebrow">{home?.eyebrow || contact?.city || 'Cantagallo, Bolivar'}</p>
               <h1 className="display-title max-w-5xl text-6xl leading-[0.88] sm:text-7xl lg:text-[6.5rem]">
-                Todo para tu instalacion electrica, en un solo lugar.
+                {home?.headline || 'Todo para tu instalacion electrica, en un solo lugar.'}
               </h1>
               <p className="max-w-2xl text-base leading-8 text-eb-700 sm:text-lg">
-                Revisa referencias, compara opciones y escribenos por WhatsApp para confirmar
-                disponibilidad, precios y asesoria para tu compra.
+                {home?.subheadline ||
+                  'Revisa referencias, compara opciones y escribenos por WhatsApp para confirmar disponibilidad, precios y asesoria para tu compra.'}
               </p>
             </div>
 
             <div data-hero-copy className="flex flex-col gap-3 sm:flex-row">
               <Link href="/catalogo" className="btn-primary">
-                Explorar catalogo
+                {home?.primaryCta || 'Explorar catalogo'}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
               <a
-                href={`https://wa.me/${siteConfig.whatsappNumber}`}
+                href={buildGeneralWhatsAppUrl(contact?.whatsappNumber)}
                 target="_blank"
                 rel="noreferrer"
                 className="btn-secondary"
               >
                 <MessageCircle className="mr-2 h-4 w-4" />
-                Abrir WhatsApp
+                {home?.secondaryCta || 'Abrir WhatsApp'}
               </a>
             </div>
 
@@ -163,7 +168,7 @@ export default function HomeHero({
               </span>
               <span className="inline-flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-eb-accent" />
-                {siteConfig.city}
+                {contact?.city || siteConfig.city}
               </span>
             </div>
           </div>
@@ -217,9 +222,9 @@ export default function HomeHero({
                     Visitanos o escribenos
                   </p>
                   <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-white">
-                    {siteConfig.city}
+                    {contact?.city || siteConfig.city}
                   </p>
-                  <p className="mt-4 text-sm leading-7 text-white/75">{siteConfig.hours}</p>
+                  <p className="mt-4 text-sm leading-7 text-white/75">{contact?.hours || siteConfig.hours}</p>
                 </div>
 
                 {third ? (
