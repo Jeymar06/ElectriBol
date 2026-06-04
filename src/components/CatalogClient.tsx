@@ -4,6 +4,7 @@ import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { Category, ProductWithCategory } from '@/types';
 import ProductCard from '@/components/ProductCard';
+import { buildCatalogWhatsAppUrl } from '@/lib/site';
 import { normalizeText } from '@/utils/format';
 
 interface CatalogClientProps {
@@ -94,6 +95,17 @@ export default function CatalogClient({
         <p className="font-heading text-sm uppercase tracking-[0.18em] text-eb-200">
           {filtered.length} productos encontrados
         </p>
+        <a
+          href={buildCatalogWhatsAppUrl(
+            category === 'todos' ? undefined : categories.find((item) => item.slug === category)?.name,
+            query || undefined
+          )}
+          target="_blank"
+          rel="noreferrer"
+          className="hidden rounded-full border border-eb-500/10 bg-white/90 px-4 py-2 font-heading text-[11px] uppercase tracking-[0.16em] text-eb-800 md:inline-flex"
+        >
+          No encuentras lo que buscas?
+        </a>
       </div>
 
       {filtered.length > 0 ? (
@@ -110,6 +122,17 @@ export default function CatalogClient({
           <p className="mt-3 text-sm text-eb-700">
             Prueba con otra categoria, desactiva el filtro de disponibilidad o cambia la busqueda.
           </p>
+          <a
+            href={buildCatalogWhatsAppUrl(
+              category === 'todos' ? undefined : categories.find((item) => item.slug === category)?.name,
+              query || undefined
+            )}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-primary mt-6"
+          >
+            Consultar por WhatsApp
+          </a>
         </div>
       )}
     </div>

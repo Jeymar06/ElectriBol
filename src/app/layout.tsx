@@ -3,7 +3,7 @@ import { DM_Sans, Oswald } from 'next/font/google';
 import './globals.css';
 import AppShell from '@/components/AppShell';
 import { getBaseUrl } from '@/lib/env';
-import { siteConfig } from '@/lib/site';
+import { buildLocalBusinessSchema, siteConfig } from '@/lib/site';
 
 const heading = Oswald({
   subsets: ['latin'],
@@ -46,9 +46,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const localBusinessSchema = buildLocalBusinessSchema();
+
   return (
     <html lang="es">
       <body className={`${heading.variable} ${body.variable}`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+        />
         <AppShell>{children}</AppShell>
       </body>
     </html>

@@ -21,6 +21,8 @@ export const siteConfig = {
     'https://www.google.com/maps/search/?api=1&query=Carrera%203%20%2311-30%2C%20Barrio%2023%20de%20enero%2C%20Cantagallo%2C%20Bolivar%2C%20Colombia',
   googleMapsEmbedUrl:
     'https://www.google.com/maps?q=Carrera%203%20%2311-30%2C%20Barrio%2023%20de%20enero%2C%20Cantagallo%2C%20Bolivar%2C%20Colombia&z=16&output=embed',
+  serviceArea: 'Cantagallo, Bolivar y alrededores',
+  priceRange: '$$',
 };
 
 export function createWhatsAppUrl(message: string): string {
@@ -31,4 +33,57 @@ export function buildProductWhatsAppUrl(name: string, reference: string): string
   return createWhatsAppUrl(
     `Hola, me interesa *${name}* (Ref: ${reference}). Me pueden dar mas informacion?`
   );
+}
+
+export function buildCatalogWhatsAppUrl(category?: string, query?: string): string {
+  if (query) {
+    return createWhatsAppUrl(
+      `Hola, estoy buscando ${query} y quiero saber si lo tienen disponible.`
+    );
+  }
+
+  if (category) {
+    return createWhatsAppUrl(
+      `Hola, quiero informacion sobre productos de la categoria ${category}.`
+    );
+  }
+
+  return createWhatsAppUrl(
+    'Hola, quiero informacion sobre productos electricos disponibles en ElectriBol.'
+  );
+}
+
+export function buildGeneralWhatsAppUrl(): string {
+  return createWhatsAppUrl(
+    'Hola, quiero informacion sobre productos, precios y disponibilidad.'
+  );
+}
+
+export function buildLocalBusinessSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HardwareStore',
+    name: siteConfig.name,
+    description: siteConfig.description,
+    image: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/og-electribol.svg`,
+    telephone: siteConfig.whatsappDisplay,
+    email: siteConfig.email,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: siteConfig.address,
+      addressLocality: 'Cantagallo',
+      addressRegion: 'Bolivar',
+      addressCountry: 'CO',
+    },
+    areaServed: siteConfig.serviceArea,
+    priceRange: siteConfig.priceRange,
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    sameAs: [],
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: siteConfig.coordinates.latitude,
+      longitude: siteConfig.coordinates.longitude,
+    },
+    openingHours: 'Mo-Fr 08:00-18:00, Sa 08:00-14:00',
+  };
 }

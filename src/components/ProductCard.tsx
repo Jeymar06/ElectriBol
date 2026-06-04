@@ -72,7 +72,7 @@ export default function ProductCard({ product }: { product: ProductWithCategory 
           className="btn-primary w-full"
         >
           <MessageCircle className="mr-2 h-4 w-4" />
-          Consultar por WhatsApp
+          Pedir informacion
         </a>
       </div>
     </article>
