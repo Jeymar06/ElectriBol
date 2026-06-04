@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { MapPinned, Navigation, Phone, Route } from 'lucide-react';
 import { siteConfig } from '@/lib/site';
+import { sendTrackingEvent } from '@/lib/tracking';
 
 export default function LocationExperience() {
   const [loading, setLoading] = useState(false);
@@ -19,6 +20,7 @@ export default function LocationExperience() {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        sendTrackingEvent({ event: 'directions_click', label: 'location_section' });
         const origin = `${position.coords.latitude},${position.coords.longitude}`;
         const destination = encodeURIComponent(siteConfig.googleMapsQuery);
         const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
@@ -70,6 +72,7 @@ export default function LocationExperience() {
                 href={siteConfig.googleMapsUrl}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => sendTrackingEvent({ event: 'map_open', label: 'location_section' })}
                 className="btn-primary"
               >
                 <Route className="mr-2 h-4 w-4" />

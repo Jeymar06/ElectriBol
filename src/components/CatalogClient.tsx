@@ -1,10 +1,11 @@
 'use client';
 
 import { Search } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Category, ProductWithCategory } from '@/types';
 import ProductCard from '@/components/ProductCard';
 import { buildCatalogWhatsAppUrl } from '@/lib/site';
+import { sendTrackingEvent } from '@/lib/tracking';
 import { normalizeText } from '@/utils/format';
 
 interface CatalogClientProps {
@@ -21,6 +22,7 @@ export default function CatalogClient({
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState(initialCategory);
   const [availableOnly, setAvailableOnly] = useState(false);
+  const lastEmptySearchKey = useRef('');
 
   const filtered = useMemo(() => {
     const normalizedQuery = normalizeText(query);
@@ -36,6 +38,26 @@ export default function CatalogClient({
       return matchesCategory && matchesAvailability && matchesQuery;
     });
   }, [availableOnly, category, products, query]);
+
+  const activeCategoryName =
+    category === 'todos' ? undefined : categories.find((item) => item.slug === category)?.name;
+
+  useEffect(() => {
+    if (filtered.length === 0) {
+      const searchKey = `${activeCategoryName || 'todos'}|${query}|${availableOnly}`;
+      if (searchKey !== lastEmptySearchKey.current && (query || activeCategoryName || availableOnly)) {
+        lastEmptySearchKey.current = searchKey;
+        sendTrackingEvent({
+          event: 'catalog_empty_search',
+          category: activeCategoryName,
+          query: query || undefined,
+          label: 'catalog_filters',
+        });
+      }
+    } else if (lastEmptySearchKey.current) {
+      lastEmptySearchKey.current = '';
+    }
+  }, [activeCategoryName, availableOnly, filtered.length, query]);
 
   return (
     <div className="space-y-8">
@@ -96,12 +118,17 @@ export default function CatalogClient({
           {filtered.length} productos encontrados
         </p>
         <a
-          href={buildCatalogWhatsAppUrl(
-            category === 'todos' ? undefined : categories.find((item) => item.slug === category)?.name,
-            query || undefined
-          )}
+          href={buildCatalogWhatsAppUrl(activeCategoryName, query || undefined)}
           target="_blank"
           rel="noreferrer"
+          onClick={() =>
+            sendTrackingEvent({
+              event: 'catalog_whatsapp_click',
+              category: activeCategoryName,
+              query: query || undefined,
+              label: 'catalog_toolbar',
+            })
+          }
           className="hidden rounded-full border border-eb-500/10 bg-white/90 px-4 py-2 font-heading text-[11px] uppercase tracking-[0.16em] text-eb-800 md:inline-flex"
         >
           No encuentras lo que buscas?
@@ -123,12 +150,17 @@ export default function CatalogClient({
             Prueba con otra categoria, desactiva el filtro de disponibilidad o cambia la busqueda.
           </p>
           <a
-            href={buildCatalogWhatsAppUrl(
-              category === 'todos' ? undefined : categories.find((item) => item.slug === category)?.name,
-              query || undefined
-            )}
+            href={buildCatalogWhatsAppUrl(activeCategoryName, query || undefined)}
             target="_blank"
             rel="noreferrer"
+            onClick={() =>
+              sendTrackingEvent({
+                event: 'catalog_whatsapp_click',
+                category: activeCategoryName,
+                query: query || undefined,
+                label: 'catalog_empty_state',
+              })
+            }
             className="btn-primary mt-6"
           >
             Consultar por WhatsApp

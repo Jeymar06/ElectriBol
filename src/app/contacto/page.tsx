@@ -1,4 +1,5 @@
 import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
+import TrackableExternalLink from '@/components/TrackableExternalLink';
 import { buildMetadata } from '@/utils/seo';
 import { siteConfig } from '@/lib/site';
 
@@ -67,15 +68,16 @@ export default function ContactPage() {
             Horario de atencion: {siteConfig.hours}. Envianos la referencia, una foto o una breve
             descripcion y te ayudamos a encontrar la mejor opcion.
           </p>
-          <a
+          <TrackableExternalLink
             href={`https://wa.me/${siteConfig.whatsappNumber}`}
             target="_blank"
             rel="noreferrer"
+            tracking={{ event: 'contact_whatsapp_click', label: 'contact_page' }}
             className="btn-primary w-full sm:w-auto"
           >
             <MessageCircle className="mr-2 h-5 w-5" />
             Abrir WhatsApp
-          </a>
+          </TrackableExternalLink>
           <iframe
             title="Ubicacion ElectriBol"
             className="min-h-[320px] w-full rounded-2xl border border-eb-300/10"

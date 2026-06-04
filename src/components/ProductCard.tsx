@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2, MessageCircle } from 'lucide-react';
 import type { ProductWithCategory } from '@/types';
 import ProductImage from '@/components/ProductImage';
 import { buildProductWhatsAppUrl } from '@/lib/site';
+import TrackableExternalLink from '@/components/TrackableExternalLink';
 import { formatCurrency } from '@/utils/format';
 
 export default function ProductCard({ product }: { product: ProductWithCategory }) {
@@ -65,15 +66,22 @@ export default function ProductCard({ product }: { product: ProductWithCategory 
           </Link>
         </div>
 
-        <a
+        <TrackableExternalLink
           href={buildProductWhatsAppUrl(product.name, product.reference)}
           target="_blank"
           rel="noreferrer"
+          tracking={{
+            event: 'product_whatsapp_click',
+            productId: product.id,
+            productName: product.name,
+            category: product.category?.name,
+            label: 'product_card',
+          }}
           className="btn-primary w-full"
         >
           <MessageCircle className="mr-2 h-4 w-4" />
           Pedir informacion
-        </a>
+        </TrackableExternalLink>
       </div>
     </article>
   );
