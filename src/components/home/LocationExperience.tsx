@@ -10,6 +10,7 @@ export default function LocationExperience({ content }: { content?: SiteContent 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const contact = content?.contact || siteConfig;
+  const section = content?.locationSection;
 
   const handleDirections = () => {
     if (!navigator.geolocation) {
@@ -30,7 +31,7 @@ export default function LocationExperience({ content }: { content?: SiteContent 
         setLoading(false);
       },
       () => {
-        setError('No pudimos tomar tu ubicacion. Abrimos el mapa general del local.');
+        setError(section?.errorText || 'No pudimos tomar tu ubicacion. Abrimos el mapa general del local.');
         window.open(contact.googleMapsUrl, '_blank', 'noopener,noreferrer');
         setLoading(false);
       },
@@ -43,27 +44,27 @@ export default function LocationExperience({ content }: { content?: SiteContent 
       <div className="shell">
         <div className="location-shell">
           <div className="space-y-5">
-            <p className="eyebrow">Ubicacion y ruta</p>
+            <p className="eyebrow">{section?.eyebrow || 'Ubicacion y ruta'}</p>
             <h2 className="display-title text-4xl sm:text-5xl">
-              Encuentranos facil y llega directo al local.
+              {section?.title || 'Encuentranos facil y llega directo al local.'}
             </h2>
             <p className="max-w-2xl text-base leading-8 text-eb-700">
-              Consulta la ubicacion, abre el recorrido en Google Maps o calcula la ruta desde tu
-              celular para visitarnos con mas facilidad.
+              {section?.description ||
+                'Consulta la ubicacion, abre el recorrido en Google Maps o calcula la ruta desde tu celular para visitarnos con mas facilidad.'}
             </p>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="glass-slab p-5">
                 <MapPinned className="h-6 w-6 text-eb-accent" />
                 <p className="mt-4 font-heading text-xl uppercase tracking-[-0.04em] text-eb-900">
-                  Direccion
+                  {section?.addressLabel || 'Direccion'}
                 </p>
                 <p className="mt-3 text-sm leading-7 text-eb-700">{contact.address}</p>
               </div>
               <div className="glass-slab p-5">
                 <Phone className="h-6 w-6 text-eb-accent" />
                 <p className="mt-4 font-heading text-xl uppercase tracking-[-0.04em] text-eb-900">
-                  Horario
+                  {section?.hoursLabel || 'Horario'}
                 </p>
                 <p className="mt-3 text-sm leading-7 text-eb-700">{contact.hours}</p>
               </div>
@@ -78,11 +79,13 @@ export default function LocationExperience({ content }: { content?: SiteContent 
                 className="btn-primary"
               >
                 <Route className="mr-2 h-4 w-4" />
-                Abrir en Google Maps
+                {section?.mapCta || 'Abrir en Google Maps'}
               </a>
               <button type="button" onClick={handleDirections} className="btn-secondary">
                 <Navigation className="mr-2 h-4 w-4" />
-                {loading ? 'Buscando ruta...' : 'Calcular ruta desde mi ubicacion'}
+                {loading
+                  ? section?.directionsLoading || 'Buscando ruta...'
+                  : section?.directionsCta || 'Calcular ruta desde mi ubicacion'}
               </button>
             </div>
 
@@ -91,7 +94,7 @@ export default function LocationExperience({ content }: { content?: SiteContent 
 
           <div className="map-frame">
             <iframe
-              title="Mapa del local ElectriBol"
+              title={`${section?.mapTitle || 'Mapa del local'} ${content?.brand.name || 'ElectriBol'}`}
               src={contact.googleMapsEmbedUrl}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"

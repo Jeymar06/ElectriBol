@@ -25,12 +25,14 @@ import { formatCurrency } from '@/utils/format';
 import { buildMetadata } from '@/utils/seo';
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const product = await getProductBySlug(params.slug);
+  const [product, content] = await Promise.all([getProductBySlug(params.slug), getSiteContent()]);
 
   if (!product) {
     return buildMetadata({
       title: 'Producto no encontrado',
       description: 'La referencia solicitada no existe en ElectriBol.',
+      image: content.seo.ogImageUrl,
+      siteName: content.seo.siteTitle,
       path: `/producto/${params.slug}`,
     });
   }
@@ -38,6 +40,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return buildMetadata({
     title: product.name,
     description: product.shortDescription,
+    image: product.images[0] || content.seo.ogImageUrl,
+    siteName: content.seo.siteTitle,
     path: `/producto/${product.slug}`,
   });
 }
@@ -70,9 +74,9 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
       <div className="shell space-y-10">
         <MotionSection>
           <nav className="flex flex-wrap items-center gap-2 text-sm text-eb-200">
-            <Link href="/">Inicio</Link>
+            <Link href="/">{content.productPage.breadcrumbHome}</Link>
             <ChevronRight className="h-4 w-4" />
-            <Link href="/catalogo">Catalogo</Link>
+            <Link href="/catalogo">{content.productPage.breadcrumbCatalog}</Link>
             <ChevronRight className="h-4 w-4" />
             {product.category ? (
               <>
@@ -121,7 +125,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
               <div className="inline-flex items-center gap-2 rounded-full border border-eb-500/10 bg-white/85 px-4 py-2">
                 <Sparkles className="h-4 w-4 text-eb-accent" />
                 <span className="font-heading text-[11px] uppercase tracking-[0.22em] text-eb-800">
-                  {product.category?.name || 'Producto'}
+                  {product.category?.name || content.productPage.categoryFallback}
                 </span>
               </div>
 
@@ -142,14 +146,17 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
                   </p>
                 ) : null}
                 <p className="text-sm uppercase tracking-[0.08em] text-eb-800">
-                  {product.available ? 'Disponible' : 'Disponibilidad por confirmar'} | Por {product.unit}
+                  {product.available
+                    ? content.productPage.availableText
+                    : content.productPage.availabilityCheckText}{' '}
+                  | {content.productPage.unitPrefix} {product.unit}
                 </p>
               </div>
 
               <div className="grid gap-3 sm:grid-cols-3">
                 <div className="customer-proof-pill">
                   <CheckCircle2 className="h-4 w-4 text-eb-accent" />
-                  Consulta rapida
+                  {content.productPage.quickConsultLabel}
                 </div>
                 <div className="customer-proof-pill">
                   <MapPin className="h-4 w-4 text-eb-accent" />
@@ -157,7 +164,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
                 </div>
                 <div className="customer-proof-pill">
                   <Clock3 className="h-4 w-4 text-eb-accent" />
-                  Atencion local
+                  {content.productPage.localAttentionLabel}
                 </div>
               </div>
             </div>
@@ -165,21 +172,20 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="glass-slab p-5">
                 <p className="font-heading text-[11px] uppercase tracking-[0.18em] text-eb-700">
-                  Descripcion
+                  {content.productPage.descriptionLabel}
                 </p>
                 <p className="mt-4 text-sm leading-7 text-eb-700">{product.description}</p>
               </div>
               <div className="glass-slab p-5">
                 <p className="font-heading text-[11px] uppercase tracking-[0.18em] text-eb-700">
-                  Atencion directa
+                  {content.productPage.supportEyebrow}
                 </p>
                 <p className="mt-4 text-sm leading-7 text-eb-700">
-                  Si tienes dudas sobre medida, compatibilidad o cantidad, escribenos por
-                  WhatsApp y revisamos contigo la mejor opcion disponible.
+                  {content.productPage.supportText}
                 </p>
                 <div className="mt-5 inline-flex items-center gap-2 text-sm text-eb-800">
                   <ShieldCheck className="h-4 w-4 text-eb-accent" />
-                  Asesoria antes de comprar
+                  {content.productPage.supportProof}
                 </div>
               </div>
             </div>
@@ -199,10 +205,10 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
                 className="btn-primary flex-1"
               >
                 <MessageCircle className="mr-2 h-5 w-5" />
-                Consultar por WhatsApp
+                {content.productPage.consultCta}
               </TrackableExternalLink>
               <Link href="/catalogo" className="btn-secondary flex-1">
-                Volver al catalogo
+                {content.productPage.backCta}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </div>
@@ -211,16 +217,17 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
 
         <MotionSection className="product-confidence-band">
           <div>
-            <p className="font-heading text-xl uppercase text-eb-900">Compra con ayuda directa</p>
+            <p className="font-heading text-xl uppercase text-eb-900">
+              {content.productPage.confidenceTitle}
+            </p>
             <p className="mt-2 text-sm leading-7 text-eb-700">
-              Te atendemos desde {content.contact.city}, confirmamos disponibilidad y te guiamos si
-              necesitas una alternativa compatible.
+              Te atendemos desde {content.contact.city}, {content.productPage.confidenceText}
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             <span className="customer-proof-pill">
               <MessageCircle className="h-4 w-4 text-eb-accent" />
-              WhatsApp directo
+              {content.productPage.whatsappLabel}
             </span>
             <span className="customer-proof-pill">
               <Clock3 className="h-4 w-4 text-eb-accent" />
@@ -228,7 +235,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
             </span>
             <span className="customer-proof-pill">
               <MapPin className="h-4 w-4 text-eb-accent" />
-              Como llegar
+              {content.productPage.routeLabel}
             </span>
           </div>
         </MotionSection>
@@ -236,14 +243,14 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
         {related.length > 0 ? (
           <MotionSection className="space-y-6">
             <div>
-              <p className="eyebrow">Relacionados</p>
+              <p className="eyebrow">{content.productPage.relatedEyebrow}</p>
               <h2 className="display-title mt-3 text-4xl">
-                Otras opciones que pueden interesarte.
+                {content.productPage.relatedTitle}
               </h2>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {related.map((item) => (
-                <ProductCard key={item.id} product={item} whatsappNumber={content.contact.whatsappNumber} />
+                <ProductCard key={item.id} product={item} content={content} />
               ))}
             </div>
           </MotionSection>
@@ -265,7 +272,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
           className="btn-primary w-full"
         >
           <MessageCircle className="mr-2 h-5 w-5" />
-          Consultar este producto
+          {content.productPage.mobileCta}
         </TrackableExternalLink>
       </div>
     </div>

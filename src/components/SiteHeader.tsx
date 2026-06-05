@@ -7,16 +7,15 @@ import { Menu, Phone, X, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { SiteContent } from '@/types';
 
-const links = [
-  { href: '/', label: 'Inicio' },
-  { href: '/catalogo', label: 'Catalogo' },
-  { href: '/contacto', label: 'Contacto' },
-];
-
 export default function SiteHeader({ content }: { content: SiteContent }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const links = [
+    { href: '/', label: content.nav.homeLabel },
+    { href: '/catalogo', label: content.nav.catalogLabel },
+    { href: '/contacto', label: content.nav.contactLabel },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -75,7 +74,7 @@ export default function SiteHeader({ content }: { content: SiteContent }) {
         <div className="hidden items-center gap-3 md:flex">
           <a href={`tel:${content.contact.whatsappNumber}`} className="btn-secondary">
             <Phone className="mr-2 h-4 w-4" />
-            Llamar
+            {content.nav.callCta}
           </a>
           <a
             href={`https://wa.me/${content.contact.whatsappNumber}`}
@@ -83,7 +82,7 @@ export default function SiteHeader({ content }: { content: SiteContent }) {
             rel="noreferrer"
             className="btn-primary"
           >
-            WhatsApp
+            {content.nav.whatsappCta}
           </a>
         </div>
 
@@ -120,7 +119,7 @@ export default function SiteHeader({ content }: { content: SiteContent }) {
               rel="noreferrer"
               className="btn-primary w-full"
             >
-              WhatsApp
+              {content.nav.whatsappCta}
             </a>
           </div>
         </div>

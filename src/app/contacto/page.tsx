@@ -4,11 +4,17 @@ import { buildMetadata } from '@/utils/seo';
 import { buildGeneralWhatsAppUrl } from '@/lib/site';
 import { getSiteContent } from '@/lib/site-content';
 
-export const metadata = buildMetadata({
-  title: 'Contacto',
-  description: 'Contacta a ElectriBol por WhatsApp, telefono o correo.',
-  path: '/contacto',
-});
+export async function generateMetadata() {
+  const content = await getSiteContent();
+
+  return buildMetadata({
+    title: content.seo.contactTitle,
+    description: content.seo.contactDescription,
+    image: content.seo.ogImageUrl,
+    siteName: content.seo.siteTitle,
+    path: '/contacto',
+  });
+}
 
 export default async function ContactPage() {
   const content = await getSiteContent();
@@ -32,7 +38,9 @@ export default async function ContactPage() {
             <div className="surface flex items-start gap-4 p-5">
               <MapPin className="mt-1 h-5 w-5 text-eb-accent" />
               <div>
-                <p className="font-heading text-sm uppercase tracking-[0.14em] text-eb-900">Direccion</p>
+                <p className="font-heading text-sm uppercase tracking-[0.14em] text-eb-900">
+                  {content.contactPage.addressLabel}
+                </p>
                 <p className="mt-2 leading-6 text-eb-700">{content.contact.address}</p>
               </div>
             </div>
@@ -40,7 +48,9 @@ export default async function ContactPage() {
             <div className="surface flex items-start gap-4 p-5">
               <Phone className="mt-1 h-5 w-5 text-eb-accent" />
               <div>
-                <p className="font-heading text-sm uppercase tracking-[0.14em] text-eb-900">Telefono</p>
+                <p className="font-heading text-sm uppercase tracking-[0.14em] text-eb-900">
+                  {content.contactPage.phoneLabel}
+                </p>
                 <a href={`tel:${content.contact.whatsappNumber}`} className="mt-2 block text-eb-700">
                   {content.contact.whatsappDisplay}
                 </a>
@@ -50,7 +60,9 @@ export default async function ContactPage() {
             <div className="surface flex items-start gap-4 p-5">
               <Mail className="mt-1 h-5 w-5 text-eb-accent" />
               <div>
-                <p className="font-heading text-sm uppercase tracking-[0.14em] text-eb-900">Correo</p>
+                <p className="font-heading text-sm uppercase tracking-[0.14em] text-eb-900">
+                  {content.contactPage.emailLabel}
+                </p>
                 <a href={`mailto:${content.contact.email}`} className="mt-2 block text-eb-700">
                   {content.contact.email}
                 </a>
@@ -67,7 +79,7 @@ export default async function ContactPage() {
             </h2>
           </div>
           <p className="text-base leading-7 text-eb-700">
-            Horario de atencion: {content.contact.hours}. {content.contactPage.panelText}
+            {content.contactPage.hoursPrefix} {content.contact.hours}. {content.contactPage.panelText}
           </p>
           <TrackableExternalLink
             href={buildGeneralWhatsAppUrl(content.contact.whatsappNumber)}
@@ -80,7 +92,7 @@ export default async function ContactPage() {
             {content.contactPage.whatsappCta}
           </TrackableExternalLink>
           <iframe
-            title={`Ubicacion ${content.brand.name}`}
+            title={`${content.contactPage.mapTitle} ${content.brand.name}`}
             className="min-h-[320px] w-full rounded-2xl border border-eb-300/10"
             loading="lazy"
             src={content.contact.googleMapsEmbedUrl}

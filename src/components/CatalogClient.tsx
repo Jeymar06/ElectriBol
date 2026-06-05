@@ -100,7 +100,7 @@ export default function CatalogClient({
               onClick={() => setCategory('todos')}
               className={`customer-chip shrink-0 ${category === 'todos' ? 'customer-chip-active' : ''}`}
             >
-              Todos
+              {content.catalog.allCategoriesLabel}
             </button>
             {categories.map((item) => (
               <button
@@ -117,7 +117,7 @@ export default function CatalogClient({
           <label className="inline-flex min-h-[48px] items-center justify-between gap-3 rounded-xl border border-eb-500/10 bg-white px-4 py-3 text-sm text-eb-900 md:justify-start">
             <span className="inline-flex items-center gap-2">
               <SlidersHorizontal className="h-4 w-4 text-eb-600" />
-              Mostrar solo referencias disponibles
+              {content.catalog.availableOnlyLabel}
             </span>
             <input
               type="checkbox"
@@ -131,7 +131,7 @@ export default function CatalogClient({
 
       <div className="flex items-center justify-between gap-4">
         <p className="font-heading text-sm uppercase tracking-[0.18em] text-eb-200">
-          {filtered.length} productos encontrados
+          {filtered.length} {content.catalog.resultsLabel}
         </p>
         <a
           href={buildCatalogWhatsAppUrl(activeCategoryName, query || undefined, content.contact.whatsappNumber)}
@@ -147,18 +147,14 @@ export default function CatalogClient({
           }
           className="hidden rounded-lg border border-eb-500/10 bg-white/90 px-4 py-2 font-heading text-[11px] uppercase tracking-[0.12em] text-eb-800 md:inline-flex"
         >
-          No encuentras lo que buscas?
+          {content.catalog.toolbarCta}
         </a>
       </div>
 
       {filtered.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              whatsappNumber={content.contact.whatsappNumber}
-            />
+            <ProductCard key={product.id} product={product} content={content} />
           ))}
         </div>
       ) : (
@@ -184,7 +180,7 @@ export default function CatalogClient({
             className="btn-primary mt-6"
           >
             <MessageCircle className="mr-2 h-4 w-4" />
-            Preguntar por esta busqueda
+            {content.catalog.emptyCta}
           </a>
         </div>
       )}

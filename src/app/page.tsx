@@ -17,35 +17,19 @@ import {
 import { getSiteContent } from '@/lib/site-content';
 import { buildMetadata } from '@/utils/seo';
 
-export const metadata = buildMetadata({
-  title: 'ElectriBol | Muestrario digital',
-  description:
-    'Muestrario digital de ElectriBol con lamparas LED, cables, reflectores e iluminacion exterior en Cantagallo, Bolivar.',
-  path: '/',
-});
+const benefitIcons = [ShieldCheck, Sparkles, Truck, Zap];
 
-const benefits = [
-  {
-    title: 'Asesoria confiable',
-    text: 'Te ayudamos a elegir lo que mejor se ajusta a tu hogar, negocio o proyecto.',
-    icon: ShieldCheck,
-  },
-  {
-    title: 'Compra mas clara',
-    text: 'Encuentra rapido categorias, referencias destacadas y formas de contacto sin dar vueltas.',
-    icon: Sparkles,
-  },
-  {
-    title: 'Atencion local',
-    text: 'Tienes a mano direccion, WhatsApp y ruta para visitarnos o consultarnos cuando quieras.',
-    icon: Truck,
-  },
-  {
-    title: 'Variedad electrica',
-    text: 'Desde iluminacion hasta accesorios, reunimos lo que mas necesitas para tus instalaciones.',
-    icon: Zap,
-  },
-];
+export async function generateMetadata() {
+  const content = await getSiteContent();
+
+  return buildMetadata({
+    title: content.seo.homeTitle,
+    description: content.seo.homeDescription,
+    image: content.seo.ogImageUrl,
+    siteName: content.seo.siteTitle,
+    path: '/',
+  });
+}
 
 export default async function HomePage() {
   const [categories, featuredProducts, allProducts] = await Promise.all([
@@ -96,7 +80,7 @@ export default async function HomePage() {
         <div className="shell">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl space-y-4">
-              <p className="eyebrow">Categorias</p>
+              <p className="eyebrow">{content.home.categoriesEyebrow}</p>
               <h2 className="display-title text-4xl sm:text-5xl">
                 {content.home.categoriesTitle}
               </h2>
@@ -105,7 +89,7 @@ export default async function HomePage() {
               href="/catalogo"
               className="inline-flex items-center gap-2 font-heading text-sm uppercase tracking-[0.14em] text-eb-800"
             >
-              Ver todo el catalogo
+              {content.home.categoriesCta}
               <MoveRight className="h-4 w-4" />
             </Link>
           </div>
@@ -120,7 +104,7 @@ export default async function HomePage() {
                 <div className="flex items-start justify-between gap-4">
                   <CategoryIcon name={category.icon} className="h-8 w-8 text-eb-accent" />
                   <span className="font-heading text-[11px] uppercase tracking-[0.2em] text-eb-700">
-                    {total} refs
+                    {total} {content.home.categoryRefsLabel}
                   </span>
                 </div>
                 <div className="space-y-3">
@@ -130,7 +114,7 @@ export default async function HomePage() {
                   <p className="text-sm leading-7 text-eb-700">{category.description}</p>
                 </div>
                 <span className="inline-flex items-center gap-2 font-heading text-xs uppercase tracking-[0.16em] text-eb-800">
-                  Explorar
+                  {content.home.categoryExploreLabel}
                   <ArrowRight className="h-4 w-4" />
                 </span>
               </Link>
@@ -143,7 +127,7 @@ export default async function HomePage() {
         <div className="shell">
           <div className="feature-ribbon">
             <div className="max-w-2xl space-y-4">
-              <p className="eyebrow">Por que elegirnos</p>
+              <p className="eyebrow">{content.home.trustEyebrow}</p>
               <h2 className="display-title text-4xl sm:text-5xl">
                 {content.home.trustTitle}
               </h2>
@@ -153,8 +137,8 @@ export default async function HomePage() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              {benefits.map((item) => {
-                const Icon = item.icon;
+              {content.home.benefits.map((item, index) => {
+                const Icon = benefitIcons[index % benefitIcons.length];
                 return (
                   <div key={item.title} className="glass-slab p-5">
                     <Icon className="h-7 w-7 text-eb-accent" />
@@ -175,7 +159,7 @@ export default async function HomePage() {
           <div className="product-shelf-shell">
             <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl space-y-4">
-                <p className="eyebrow">Destacados</p>
+                <p className="eyebrow">{content.home.featuredEyebrow}</p>
                 <h2 className="display-title text-4xl sm:text-5xl">
                   {content.home.featuredTitle}
                 </h2>
@@ -187,7 +171,7 @@ export default async function HomePage() {
                 href="/catalogo"
                 className="inline-flex items-center gap-2 font-heading text-sm uppercase tracking-[0.08em] text-eb-800"
               >
-                Catalogo completo
+                {content.home.featuredCta}
                 <MoveRight className="h-4 w-4" />
               </Link>
             </div>
@@ -195,7 +179,7 @@ export default async function HomePage() {
             <div className="product-shelf">
               {featuredProducts.map((product) => (
                 <div key={product.id} className="product-shelf-item">
-                  <ProductCard product={product} whatsappNumber={content.contact.whatsappNumber} />
+                  <ProductCard product={product} content={content} />
                 </div>
               ))}
             </div>
@@ -207,7 +191,7 @@ export default async function HomePage() {
         <div className="shell">
           <div className="story-slab">
             <div className="space-y-5">
-              <p className="eyebrow">Compra con respaldo</p>
+              <p className="eyebrow">{content.home.storyEyebrow}</p>
               <h2 className="display-title text-4xl sm:text-5xl">
                 {content.home.storyTitle}
               </h2>
@@ -217,35 +201,21 @@ export default async function HomePage() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
-              <div className="glass-slab p-5">
-                <p className="font-heading text-[11px] uppercase tracking-[0.2em] text-eb-700">
-                  Atencion
-                </p>
-                <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
-                  Cercana
-                </p>
-              </div>
-              <div className="glass-slab p-5">
-                <p className="font-heading text-[11px] uppercase tracking-[0.2em] text-eb-700">
-                  Respuesta
-                </p>
-                <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
-                  Rapida
-                </p>
-              </div>
-              <div className="glass-slab p-5">
-                <p className="font-heading text-[11px] uppercase tracking-[0.2em] text-eb-700">
-                  Compra
-                </p>
-                <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
-                  Segura
-                </p>
-              </div>
+              {content.home.storyCards.map((item) => (
+                <div key={`${item.label}-${item.value}`} className="glass-slab p-5">
+                  <p className="font-heading text-[11px] uppercase tracking-[0.2em] text-eb-700">
+                    {item.label}
+                  </p>
+                  <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
+                    {item.value}
+                  </p>
+                </div>
+              ))}
             </div>
 
             <div className="inline-flex items-center gap-2 rounded-full border border-eb-500/10 bg-white/90 px-4 py-2 text-sm text-eb-800">
               <CheckCircle2 className="h-4 w-4 text-eb-accent" />
-              Escribenos por WhatsApp y recibe ayuda para encontrar la referencia indicada.
+              {content.home.storyCtaText}
             </div>
           </div>
         </div>

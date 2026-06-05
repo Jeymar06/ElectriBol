@@ -87,6 +87,21 @@ export default function HomeHero({
   const [lead, second, third] = products;
   const home = content?.home;
   const contact = content?.contact;
+  const resolveStatValue = (value: string) => {
+    if (value === 'auto:products') {
+      return String(totalProducts);
+    }
+
+    if (value === 'auto:categories') {
+      return String(totalCategories);
+    }
+
+    if (value === 'auto:city') {
+      return contact?.city || siteConfig.city;
+    }
+
+    return value;
+  };
 
   return (
     <section className="hero-shell overflow-hidden pb-10 pt-6 md:pt-8" ref={ref}>
@@ -131,45 +146,30 @@ export default function HomeHero({
             </div>
 
             <div data-hero-copy className="grid gap-4 sm:grid-cols-3">
-              <div className="glass-slab p-4">
-                <p className="font-heading text-[11px] uppercase tracking-[0.18em] text-eb-700">
-                  Referencias
-                </p>
-                <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
-                  {totalProducts}
-                </p>
-              </div>
-              <div className="glass-slab p-4">
-                <p className="font-heading text-[11px] uppercase tracking-[0.18em] text-eb-700">
-                  Categorias
-                </p>
-                <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
-                  {totalCategories}
-                </p>
-              </div>
-              <div className="glass-slab p-4">
-                <p className="font-heading text-[11px] uppercase tracking-[0.18em] text-eb-700">
-                  Atencion
-                </p>
-                <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
-                  Directa
-                </p>
-              </div>
+              {(home?.heroStats || []).map((item) => (
+                <div key={`${item.label}-${item.value}`} className="glass-slab p-4">
+                  <p className="font-heading text-[11px] uppercase tracking-[0.18em] text-eb-700">
+                    {item.label}
+                  </p>
+                  <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
+                    {resolveStatValue(item.value)}
+                  </p>
+                </div>
+              ))}
             </div>
 
             <div data-hero-copy className="flex flex-wrap gap-5 text-sm text-eb-800">
-              <span className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-eb-accent" />
-                Atencion rapida
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-eb-accent" />
-                Cotizacion por WhatsApp
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-eb-accent" />
-                {contact?.city || siteConfig.city}
-              </span>
+              {(home?.heroBullets || []).map((item) => {
+                const label = resolveStatValue(item);
+                const Icon = item === 'auto:city' ? MapPin : CheckCircle2;
+
+                return (
+                  <span key={item} className="inline-flex items-center gap-2">
+                    <Icon className="h-4 w-4 text-eb-accent" />
+                    {label}
+                  </span>
+                );
+              })}
             </div>
           </div>
 
@@ -188,7 +188,7 @@ export default function HomeHero({
                   </div>
                   <div className="space-y-2 p-5">
                     <p className="font-heading text-[11px] uppercase tracking-[0.22em] text-eb-700">
-                      Recomendado
+                      {home?.heroRecommendedLabel || 'Recomendado'}
                     </p>
                     <h2 className="font-heading text-3xl uppercase tracking-[-0.05em] text-eb-900">
                       {lead.name}
@@ -219,7 +219,7 @@ export default function HomeHero({
               <div className="scene-utility" data-scene-card data-float-card="3">
                 <div className="hero-panel min-h-[190px] p-6">
                   <p className="font-heading text-xs uppercase tracking-[0.26em] text-white/65">
-                    Visitanos o escribenos
+                    {home?.heroPanelEyebrow || 'Visitanos o escribenos'}
                   </p>
                   <p className="mt-3 font-heading text-3xl uppercase tracking-[-0.05em] text-white">
                     {contact?.city || siteConfig.city}

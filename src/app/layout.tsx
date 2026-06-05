@@ -3,7 +3,7 @@ import { DM_Sans, Oswald } from 'next/font/google';
 import './globals.css';
 import AppShell from '@/components/AppShell';
 import { getBaseUrl } from '@/lib/env';
-import { buildLocalBusinessSchema, siteConfig } from '@/lib/site';
+import { buildLocalBusinessSchema } from '@/lib/site';
 import { getSiteContent } from '@/lib/site-content';
 
 const heading = Oswald({
@@ -18,29 +18,40 @@ const body = DM_Sans({
   weight: ['400', '500', '700'],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(getBaseUrl()),
-  title: {
-    default: 'ElectriBol | Ferreteria electrica en Cantagallo',
-    template: '%s | ElectriBol',
-  },
-  description: siteConfig.description,
-  openGraph: {
-    title: 'ElectriBol',
-    description: siteConfig.description,
-    url: getBaseUrl(),
-    siteName: 'ElectriBol',
-    locale: 'es_CO',
-    type: 'website',
-    images: [{ url: '/og-electribol.svg', width: 1200, height: 630, alt: 'ElectriBol' }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'ElectriBol',
-    description: siteConfig.description,
-    images: ['/og-electribol.svg'],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getSiteContent();
+
+  return {
+    metadataBase: new URL(getBaseUrl()),
+    title: {
+      default: content.seo.homeTitle,
+      template: content.seo.titleTemplate,
+    },
+    description: content.seo.homeDescription,
+    openGraph: {
+      title: content.seo.homeTitle,
+      description: content.seo.homeDescription,
+      url: getBaseUrl(),
+      siteName: content.seo.siteTitle,
+      locale: 'es_CO',
+      type: 'website',
+      images: [
+        {
+          url: content.seo.ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: content.seo.siteTitle,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: content.seo.homeTitle,
+      description: content.seo.homeDescription,
+      images: [content.seo.ogImageUrl],
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

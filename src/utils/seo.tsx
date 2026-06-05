@@ -6,6 +6,7 @@ interface SEOInput {
   description: string;
   path?: string;
   image?: string;
+  siteName?: string;
 }
 
 export function buildMetadata({
@@ -13,6 +14,7 @@ export function buildMetadata({
   description,
   path = '/',
   image = '/og-electribol.svg',
+  siteName = 'ElectriBol',
 }: SEOInput): Metadata {
   const url = `${getBaseUrl()}${path}`;
 
@@ -23,7 +25,7 @@ export function buildMetadata({
       title,
       description,
       url,
-      siteName: 'ElectriBol',
+      siteName,
       locale: 'es_CO',
       type: 'website',
       images: [{ url: image, width: 1200, height: 630, alt: title }],

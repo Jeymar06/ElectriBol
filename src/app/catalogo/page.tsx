@@ -9,11 +9,17 @@ import { getCategories, getProductsWithCategories } from '@/lib/catalog';
 import { getSiteContent } from '@/lib/site-content';
 import { buildMetadata } from '@/utils/seo';
 
-export const metadata = buildMetadata({
-  title: 'Catalogo completo',
-  description: 'Explora el catalogo de lamparas LED, cables, reflectores y accesorios de ElectriBol.',
-  path: '/catalogo',
-});
+export async function generateMetadata() {
+  const content = await getSiteContent();
+
+  return buildMetadata({
+    title: content.seo.catalogTitle,
+    description: content.seo.catalogDescription,
+    image: content.seo.ogImageUrl,
+    siteName: content.seo.siteTitle,
+    path: '/catalogo',
+  });
+}
 
 export default async function CatalogPage() {
   const [products, categories, content] = await Promise.all([
@@ -42,7 +48,7 @@ export default async function CatalogPage() {
                 </Link>
                 <span className="inline-flex items-center gap-2 rounded-full border border-eb-500/10 bg-white/85 px-4 py-2 text-sm text-eb-800">
                   <CheckCircle2 className="h-4 w-4 text-eb-accent" />
-                  {products.length} referencias visibles
+                  {products.length} {content.catalog.visibleRefsLabel}
                 </span>
               </div>
             </div>
@@ -51,19 +57,19 @@ export default async function CatalogPage() {
               <div className="glass-slab p-5">
                 <Search className="h-6 w-6 text-eb-accent" />
                 <p className="mt-4 font-heading text-2xl uppercase tracking-[-0.04em] text-eb-900">
-                  Busqueda rapida
+                  {content.catalog.searchCardTitle}
                 </p>
                 <p className="mt-3 text-sm leading-7 text-eb-700">
-                  Escribe el nombre, la referencia o la categoria para ubicar productos mas rapido.
+                  {content.catalog.searchCardText}
                 </p>
               </div>
               <div className="glass-slab p-5">
                 <SlidersHorizontal className="h-6 w-6 text-eb-accent" />
                 <p className="mt-4 font-heading text-2xl uppercase tracking-[-0.04em] text-eb-900">
-                  Filtros utiles
+                  {content.catalog.filterCardTitle}
                 </p>
                 <p className="mt-3 text-sm leading-7 text-eb-700">
-                  Organiza el catalogo por disponibilidad y categoria para comparar con mas facilidad.
+                  {content.catalog.filterCardText}
                 </p>
               </div>
             </div>

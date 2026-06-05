@@ -6,6 +6,26 @@
     "description": "Encuentra lamparas LED, cables electricos, reflectores y accesorios para tu hogar, negocio o proyecto.",
     "announcement": "Atendemos en Cantagallo, Bolivar. Lunes a viernes de 8AM a 6PM y sabados hasta las 2PM."
   },
+  "seo": {
+    "siteTitle": "ElectriBol",
+    "titleTemplate": "%s | ElectriBol",
+    "homeTitle": "ElectriBol | Muestrario digital",
+    "homeDescription": "Muestrario digital de ElectriBol con lamparas LED, cables, reflectores e iluminacion exterior en Cantagallo, Bolivar.",
+    "catalogTitle": "Catalogo completo",
+    "catalogDescription": "Explora el catalogo de lamparas LED, cables, reflectores y accesorios de ElectriBol.",
+    "contactTitle": "Contacto",
+    "contactDescription": "Contacta a ElectriBol por WhatsApp, telefono o correo.",
+    "ogImageUrl": "/og-electribol.svg"
+  },
+  "nav": {
+    "homeLabel": "Inicio",
+    "catalogLabel": "Catalogo",
+    "contactLabel": "Contacto",
+    "callCta": "Llamar",
+    "whatsappCta": "WhatsApp",
+    "footerTitle": "Navegacion",
+    "adminAccessLabel": "Acceso admin"
+  },
   "contact": {
     "city": "Cantagallo, Bolivar",
     "address": "Carrera 3 #11-30, Barrio 23 de enero, Cantagallo, Bolivar",
@@ -24,13 +44,75 @@
     "subheadline": "Revisa referencias, compara opciones y escribenos por WhatsApp para confirmar disponibilidad, precios y asesoria para tu compra.",
     "primaryCta": "Explorar catalogo",
     "secondaryCta": "Abrir WhatsApp",
+    "categoriesEyebrow": "Categorias",
     "categoriesTitle": "Encuentra lo que buscas por tipo de producto.",
+    "categoriesCta": "Ver todo el catalogo",
+    "categoryRefsLabel": "refs",
+    "categoryExploreLabel": "Explorar",
+    "featuredEyebrow": "Destacados",
     "featuredTitle": "Algunas referencias que mas nos piden nuestros clientes.",
     "featuredSubtitle": "Una vitrina corta para empezar rapido: revisa, abre la ficha o consulta por WhatsApp con la referencia lista.",
+    "featuredCta": "Catalogo completo",
+    "trustEyebrow": "Por que elegirnos",
     "trustTitle": "Todo pensado para ayudarte a comprar con mas confianza.",
     "trustText": "En ElectriBol te acompanamos desde la busqueda de la referencia hasta la atencion por WhatsApp para que tu compra sea mas rapida y segura.",
+    "storyEyebrow": "Compra con respaldo",
     "storyTitle": "Te orientamos para que elijas mejor desde el primer mensaje.",
-    "storyText": "Si ya sabes que referencia necesitas, te ayudamos a confirmar disponibilidad. Si aun estas comparando opciones, tambien te orientamos para que compres con mas seguridad."
+    "storyText": "Si ya sabes que referencia necesitas, te ayudamos a confirmar disponibilidad. Si aun estas comparando opciones, tambien te orientamos para que compres con mas seguridad.",
+    "storyCtaText": "Escribenos por WhatsApp y recibe ayuda para encontrar la referencia indicada.",
+    "heroStats": [
+      {
+        "label": "Referencias",
+        "value": "auto:products"
+      },
+      {
+        "label": "Categorias",
+        "value": "auto:categories"
+      },
+      {
+        "label": "Atencion",
+        "value": "Directa"
+      }
+    ],
+    "heroBullets": [
+      "Atencion rapida",
+      "Cotizacion por WhatsApp",
+      "auto:city"
+    ],
+    "benefits": [
+      {
+        "title": "Asesoria confiable",
+        "text": "Te ayudamos a elegir lo que mejor se ajusta a tu hogar, negocio o proyecto."
+      },
+      {
+        "title": "Compra mas clara",
+        "text": "Encuentra rapido categorias, referencias destacadas y formas de contacto sin dar vueltas."
+      },
+      {
+        "title": "Atencion local",
+        "text": "Tienes a mano direccion, WhatsApp y ruta para visitarnos o consultarnos cuando quieras."
+      },
+      {
+        "title": "Variedad electrica",
+        "text": "Desde iluminacion hasta accesorios, reunimos lo que mas necesitas para tus instalaciones."
+      }
+    ],
+    "storyCards": [
+      {
+        "label": "Atencion",
+        "value": "Cercana"
+      },
+      {
+        "label": "Respuesta",
+        "value": "Rapida"
+      },
+      {
+        "label": "Compra",
+        "value": "Segura"
+      }
+    ],
+    "heroRecommendedLabel": "Recomendado",
+    "heroPanelEyebrow": "Visitanos o escribenos"
   },
   "catalog": {
     "eyebrow": "Catalogo completo",
@@ -39,7 +121,23 @@
     "primaryCta": "Hablar con el local",
     "searchPlaceholder": "Busca bombillos, cables, reflectores...",
     "emptyTitle": "Te ayudamos a encontrarlo",
-    "emptyText": "Si no aparece en el catalogo, escribenos con lo que buscas. Podemos confirmar disponibilidad, sugerir una alternativa o revisar una referencia parecida."
+    "emptyText": "Si no aparece en el catalogo, escribenos con lo que buscas. Podemos confirmar disponibilidad, sugerir una alternativa o revisar una referencia parecida.",
+    "searchCardTitle": "Busqueda rapida",
+    "searchCardText": "Escribe el nombre, la referencia o la categoria para ubicar productos mas rapido.",
+    "filterCardTitle": "Filtros utiles",
+    "filterCardText": "Organiza el catalogo por disponibilidad y categoria para comparar con mas facilidad.",
+    "visibleRefsLabel": "referencias visibles",
+    "allCategoriesLabel": "Todos",
+    "availableOnlyLabel": "Mostrar solo referencias disponibles",
+    "resultsLabel": "productos encontrados",
+    "toolbarCta": "No encuentras lo que buscas?",
+    "emptyCta": "Preguntar por esta busqueda",
+    "categoryHeroEyebrow": "Categoria",
+    "categoryPanelEyebrow": "Mas opciones para ti",
+    "categoryPanelTitle": "Explora esta categoria y compara las referencias disponibles.",
+    "categoryPanelText": "Aqui puedes revisar los productos de esta familia y, si lo necesitas, volver al catalogo completo para seguir comparando.",
+    "categoryBackCta": "Volver al catalogo",
+    "categoryCountSuffix": "referencias en esta familia"
   },
   "contactPage": {
     "eyebrow": "Contacto",
@@ -48,7 +146,68 @@
     "panelEyebrow": "Atencion inmediata",
     "panelTitle": "WhatsApp directo para consultas y pedidos.",
     "panelText": "Envianos la referencia, una foto o una breve descripcion y te ayudamos a encontrar la mejor opcion.",
-    "whatsappCta": "Abrir WhatsApp"
+    "whatsappCta": "Abrir WhatsApp",
+    "addressLabel": "Direccion",
+    "phoneLabel": "Telefono",
+    "emailLabel": "Correo",
+    "hoursPrefix": "Horario de atencion:",
+    "mapTitle": "Ubicacion"
+  },
+  "trustBand": {
+    "whatsappLabel": "WhatsApp directo",
+    "whatsappDetail": "Consulta disponibilidad y precios",
+    "locationDetail": "Atencion local y ruta al negocio",
+    "adviceLabel": "Asesoria antes de comprar",
+    "adviceDetail": "Te ayudamos a elegir la referencia",
+    "scheduleLabel": "Horario visible"
+  },
+  "locationSection": {
+    "eyebrow": "Ubicacion y ruta",
+    "title": "Encuentranos facil y llega directo al local.",
+    "description": "Consulta la ubicacion, abre el recorrido en Google Maps o calcula la ruta desde tu celular para visitarnos con mas facilidad.",
+    "addressLabel": "Direccion",
+    "hoursLabel": "Horario",
+    "mapCta": "Abrir en Google Maps",
+    "directionsCta": "Calcular ruta desde mi ubicacion",
+    "directionsLoading": "Buscando ruta...",
+    "errorText": "No pudimos tomar tu ubicacion. Abrimos el mapa general del local.",
+    "mapTitle": "Mapa del local"
+  },
+  "productPage": {
+    "breadcrumbHome": "Inicio",
+    "breadcrumbCatalog": "Catalogo",
+    "categoryFallback": "Producto",
+    "descriptionLabel": "Descripcion",
+    "supportEyebrow": "Atencion directa",
+    "supportText": "Si tienes dudas sobre medida, compatibilidad o cantidad, escribenos por WhatsApp y revisamos contigo la mejor opcion disponible.",
+    "supportProof": "Asesoria antes de comprar",
+    "consultCta": "Consultar por WhatsApp",
+    "backCta": "Volver al catalogo",
+    "quickConsultLabel": "Consulta rapida",
+    "localAttentionLabel": "Atencion local",
+    "confidenceTitle": "Compra con ayuda directa",
+    "confidenceText": "confirmamos disponibilidad y te guiamos si necesitas una alternativa compatible.",
+    "whatsappLabel": "WhatsApp directo",
+    "routeLabel": "Como llegar",
+    "relatedEyebrow": "Relacionados",
+    "relatedTitle": "Otras opciones que pueden interesarte.",
+    "mobileCta": "Consultar este producto",
+    "availableText": "Disponible",
+    "availabilityCheckText": "Disponibilidad por confirmar",
+    "unitPrefix": "Por",
+    "recommendedLabel": "Recomendado",
+    "heroPanelEyebrow": "Visitanos o escribenos"
+  },
+  "productCard": {
+    "featuredBadge": "Destacado",
+    "availableBadge": "Disponible",
+    "categoryFallback": "Catalogo",
+    "availableText": "Disponible",
+    "unavailableText": "Consultar disponibilidad",
+    "unitPrefix": "Por",
+    "viewMoreCta": "Ver mas",
+    "priceCta": "Consultar precio",
+    "availabilityCta": "Consultar disponibilidad"
   },
   "salesPhrases": [
     "Iluminacion LED",

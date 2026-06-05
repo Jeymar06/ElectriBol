@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, MessageCircle } from 'lucide-react';
-import type { ProductWithCategory } from '@/types';
+import type { ProductWithCategory, SiteContent } from '@/types';
 import ProductImage from '@/components/ProductImage';
 import { buildProductWhatsAppUrl } from '@/lib/site';
 import TrackableExternalLink from '@/components/TrackableExternalLink';
@@ -8,18 +8,29 @@ import { formatCurrency } from '@/utils/format';
 
 export default function ProductCard({
   product,
+  content,
   whatsappNumber,
 }: {
   product: ProductWithCategory;
+  content?: SiteContent;
   whatsappNumber?: string;
 }) {
+  const labels = content?.productCard;
+  const contactNumber = content?.contact.whatsappNumber || whatsappNumber;
+
   return (
     <article className="surface group overflow-hidden rounded-2xl border-white/70 bg-[rgba(255,255,255,0.88)] shadow-[0_18px_58px_rgba(17,53,99,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_26px_76px_rgba(17,53,99,0.13)]">
       <Link href={`/producto/${product.slug}`} className="block">
         <div className="relative aspect-[4/3] overflow-hidden border-b border-[rgba(144,202,249,0.12)]">
           <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-2">
-            {product.featured ? <span className="product-badge">Destacado</span> : null}
-            {product.available ? <span className="product-badge product-badge-light">Disponible</span> : null}
+            {product.featured ? (
+              <span className="product-badge">{labels?.featuredBadge || 'Destacado'}</span>
+            ) : null}
+            {product.available ? (
+              <span className="product-badge product-badge-light">
+                {labels?.availableBadge || 'Disponible'}
+              </span>
+            ) : null}
           </div>
           <ProductImage
             product={product}
@@ -34,15 +45,17 @@ export default function ProductCard({
       <div className="space-y-4 p-5">
         <div className="flex items-center justify-between gap-3">
           <span className="rounded-lg border border-eb-500/10 bg-eb-100/90 px-3 py-1 font-heading text-[11px] uppercase tracking-[0.08em] text-eb-800">
-            {product.category?.name || 'Catalogo'}
+            {product.category?.name || labels?.categoryFallback || 'Catalogo'}
           </span>
           {product.available ? (
             <span className="inline-flex items-center gap-1 text-xs text-emerald-600">
               <CheckCircle2 className="h-4 w-4" />
-              Disponible
+              {labels?.availableText || 'Disponible'}
             </span>
           ) : (
-            <span className="text-xs text-eb-700">Consultar disponibilidad</span>
+            <span className="text-xs text-eb-700">
+              {labels?.unavailableText || 'Consultar disponibilidad'}
+            </span>
           )}
         </div>
 
@@ -65,14 +78,16 @@ export default function ProductCard({
             {product.compareAtPrice ? (
               <p className="text-sm text-eb-error line-through">{formatCurrency(product.compareAtPrice)}</p>
             ) : (
-              <p className="text-xs uppercase tracking-[0.08em] text-eb-700">Por {product.unit}</p>
+              <p className="text-xs uppercase tracking-[0.08em] text-eb-700">
+                {labels?.unitPrefix || 'Por'} {product.unit}
+              </p>
             )}
           </div>
           <Link
             href={`/producto/${product.slug}`}
             className="inline-flex items-center gap-2 font-heading text-sm uppercase tracking-[0.08em] text-eb-800 transition hover:text-eb-500"
           >
-            Ver mas <ArrowRight className="h-4 w-4" />
+            {labels?.viewMoreCta || 'Ver mas'} <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
@@ -82,7 +97,7 @@ export default function ProductCard({
             available: product.available,
             slug: product.slug,
             imageUrl: product.images[0],
-            whatsappNumber,
+            whatsappNumber: contactNumber,
           })}
           target="_blank"
           rel="noreferrer"
@@ -96,7 +111,9 @@ export default function ProductCard({
           className="btn-primary w-full"
         >
           <MessageCircle className="mr-2 h-4 w-4" />
-          {product.priceOnRequest ? 'Consultar precio' : 'Consultar disponibilidad'}
+          {product.priceOnRequest
+            ? labels?.priceCta || 'Consultar precio'
+            : labels?.availabilityCta || 'Consultar disponibilidad'}
         </TrackableExternalLink>
       </div>
     </article>

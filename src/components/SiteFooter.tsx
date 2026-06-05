@@ -16,22 +16,26 @@ export default function SiteFooter({ content }: { content: SiteContent }) {
         </div>
 
         <div className="space-y-4 text-sm text-eb-700">
-          <p className="font-heading text-sm uppercase tracking-[0.14em] text-eb-900">Navegacion</p>
+          <p className="font-heading text-sm uppercase tracking-[0.14em] text-eb-900">
+            {content.nav.footerTitle}
+          </p>
           <div className="flex flex-col gap-3">
-            <Link href="/">Inicio</Link>
-            <Link href="/catalogo">Catalogo</Link>
-            <Link href="/contacto">Contacto</Link>
+            <Link href="/">{content.nav.homeLabel}</Link>
+            <Link href="/catalogo">{content.nav.catalogLabel}</Link>
+            <Link href="/contacto">{content.nav.contactLabel}</Link>
             <Link
               href="/admin/login"
               className="pt-2 font-heading text-[11px] uppercase tracking-[0.18em] text-eb-600"
             >
-              Acceso admin
+              {content.nav.adminAccessLabel}
             </Link>
           </div>
         </div>
 
         <div className="space-y-4 text-sm text-eb-700">
-          <p className="font-heading text-sm uppercase tracking-[0.14em] text-eb-900">Contacto</p>
+          <p className="font-heading text-sm uppercase tracking-[0.14em] text-eb-900">
+            {content.nav.contactLabel}
+          </p>
           <div className="flex items-start gap-3">
             <MapPin className="mt-0.5 h-4 w-4 text-eb-accent" />
             <span>{content.contact.address}</span>
